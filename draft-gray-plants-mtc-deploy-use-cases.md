@@ -207,7 +207,7 @@ struct {
    the corresponding parameters of the chosen subtree.  To request the
    required landmark, the client simply combines the URL as follows:
 
-   LandmarkDistributionPoint?st=start?ed=end
+   LandmarkDistributionPoint?st=start&ed=end
 
    This allows the verifier to request the required landmark so the
    inclusion proof can be verified.
