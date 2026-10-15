@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-24T01:55:36.601353+00:00",
+  "timestamp": "2026-10-15T02:07:17.462942+00:00",
   "repo": "johngray-dev/draft-gray-plants-mtc-deploy-use-cases",
   "labels": [
     {
@@ -832,6 +832,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOR-NuIc8AAAABIXB-bQ",
+      "title": "landmarkdistributionpoint: Fix querystring format",
+      "url": "https://github.com/johngray-dev/draft-gray-plants-mtc-deploy-use-cases/pull/14",
+      "state": "OPEN",
+      "author": "davidvoit",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The second parameter needs to be a & and not a second question mark to be a valid querystring",
+      "createdAt": "2026-10-14T09:45:46Z",
+      "updatedAt": "2026-10-14T09:45:46Z",
+      "baseRepository": "johngray-dev/draft-gray-plants-mtc-deploy-use-cases",
+      "baseRefName": "main",
+      "baseRefOid": "470929297ca90e605a5ef6b8152111205ad6c842",
+      "headRepository": "davidvoit/draft-gray-plants-mtc-deploy-use-cases",
+      "headRefName": "patch-1",
+      "headRefOid": "826ced846e1da6a687a333979022c7efe539d2dc",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
