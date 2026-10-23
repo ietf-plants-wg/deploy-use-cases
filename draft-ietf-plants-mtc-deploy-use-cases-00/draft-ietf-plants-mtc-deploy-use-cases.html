@@ -1,0 +1,2472 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Merkle Tree Certificates Deployment Use Cases</title>
+<meta content="John Gray" name="author">
+<meta content="Jan Klaussner" name="author">
+<meta content="Luke Tindell" name="author">
+<meta content="Ganesh Mallaya" name="author">
+<meta content="
+       Merkle Tree Certificates (MTC)
+I-D.ietf-plants-merkle-tree-certs has been defined for the
+use case of the WebPKI.
+In this document we explore when and how MTC in parts or full can be used in different
+use cases. Some of this use-cases may provide benefit for private PKI usage. 
+    " name="description">
+<meta content="xml2rfc 3.34.1" name="generator">
+<meta content="Merkle Tree Certificate" name="keyword">
+<meta content="Post Quantum" name="keyword">
+<meta content="PKI" name="keyword">
+<meta content="draft-ietf-plants-mtc-deploy-use-cases-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.34.1
+    Python 3.14.8
+    ConfigArgParse 1.8.0
+    google-i18n-address 3.1.1
+    intervaltree 3.2.1
+    Jinja2 3.1.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.13.4
+    pycountry 24.6.1
+    PyYAML 6.0.3
+    requests 2.33.1
+    wcwidth 0.9.2
+-->
+<link href="draft-ietf-plants-mtc-deploy-use-cases.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
+}
+svg {
+  display: block;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
+}
+.alignCenter {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+      float: none;
+    }
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a {
+  text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
+}
+.iref + a[href].internal {
+  color: var(--text-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
+  }
+  @media print {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+  & .prepared {
+    float: right;
+  }
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
+  }
+}
+
+/* Comments */
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
+      }
+    }
+    & a.toplink {
+      float: right;
+    }
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
+    }
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc {
+    page-break-before: always;
+    border-top: none;
+    padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">MTC Use Cases</td>
+<td class="right">October 2026</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Gray, et al.</td>
+<td class="center">Expires 26 April 2027</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">PKI, Logs, And Tree Signatures</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-plants-mtc-deploy-use-cases-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2026-10-23" class="published">23 October 2026</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2027-04-26">26 April 2027</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">J. Gray</div>
+<div class="org">Entrust</div>
+</div>
+<div class="author">
+      <div class="author-name">J. Klaussner</div>
+<div class="org">Bundesdruckerei GmbH</div>
+</div>
+<div class="author">
+      <div class="author-name">L. Tindell</div>
+<div class="org">UK National Cyber Security Centre</div>
+</div>
+<div class="author">
+      <div class="author-name">G. Mallaya</div>
+<div class="org">AppViewX Inc</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Merkle Tree Certificates Deployment Use Cases</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">Merkle Tree Certificates (MTC)
+I-D.ietf-plants-merkle-tree-certs has been defined for the
+use case of the WebPKI.
+In this document we explore when and how MTC in parts or full can be used in different
+use cases. Some of this use-cases may provide benefit for private PKI usage.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://github.com/ietf-plants-wg/deploy-use-cases/draft-ietf-plants-mtc-deploy-use-cases.html">https://github.com/ietf-plants-wg/deploy-use-cases/draft-ietf-plants-mtc-deploy-use-cases.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-plants-mtc-deploy-use-cases/">https://datatracker.ietf.org/doc/draft-ietf-plants-mtc-deploy-use-cases/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        PKI, Logs, And Tree Signatures Working Group mailing list (<span><a href="mailto:plants@ietf.org">mailto:plants@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/plants">https://mailarchive.ietf.org/arch/browse/plants</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/plants/">https://www.ietf.org/mailman/listinfo/plants/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/ietf-plants-wg/deploy-use-cases">https://github.com/ietf-plants-wg/deploy-use-cases</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 26 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2026 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-brief-overview-of-mtc" class="internal xref">Brief overview of MTC</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-batch-size-trade-offs" class="internal xref">Batch size trade-offs</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-use-cases" class="internal xref">Use cases</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-verification-of-landmark-re" class="internal xref">Verification of LandMark-Relative Merkle Tree Certificates outside the WebPKI</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
+                    <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-landmark-distribution-point" class="internal xref">Landmark Distribution Point Fetching Mechanism</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.2">
+                    <p id="section-toc.1-1.3.2.1.2.2.1"><a href="#section-3.1.2" class="auto internal xref">3.1.2</a>.  <a href="#name-format-of-landmark" class="internal xref">Format of Landmark</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.3">
+                    <p id="section-toc.1-1.3.2.1.2.3.1"><a href="#section-3.1.3" class="auto internal xref">3.1.3</a>.  <a href="#name-landmark-subtree-proof-retr" class="internal xref">Landmark Subtree Proof Retrieval</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.4">
+                    <p id="section-toc.1-1.3.2.1.2.4.1"><a href="#section-3.1.4" class="auto internal xref">3.1.4</a>.  <a href="#name-validation-procedure" class="internal xref">Validation Procedure</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.5">
+                    <p id="section-toc.1-1.3.2.1.2.5.1"><a href="#section-3.1.5" class="auto internal xref">3.1.5</a>.  <a href="#name-efficiency-considerations" class="internal xref">Efficiency Considerations</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.6">
+                    <p id="section-toc.1-1.3.2.1.2.6.1"><a href="#section-3.1.6" class="auto internal xref">3.1.6</a>.  <a href="#name-skip-links-for-efficiency" class="internal xref">Skip links for efficiency</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.7">
+                    <p id="section-toc.1-1.3.2.1.2.7.1"><a href="#section-3.1.7" class="auto internal xref">3.1.7</a>.  <a href="#name-more-items-to-be-discussed" class="internal xref">More items to be discussed:</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.8">
+                    <p id="section-toc.1-1.3.2.1.2.8.1"><a href="#section-3.1.8" class="auto internal xref">3.1.8</a>.  <a href="#name-landmark-distribution-serve" class="internal xref">Landmark Distribution server</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-batching-for-performance-op" class="internal xref">Batching for performance optimization</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-just-using-transparency" class="internal xref">Just using transparency</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-certificate-revocation" class="internal xref">Certificate Revocation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-code-signing-and-software-s" class="internal xref">Code Signing and Software Supply Chain Integrity</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5.2.1">
+                    <p id="section-toc.1-1.3.2.5.2.1.1"><a href="#section-3.5.1" class="auto internal xref">3.5.1</a>.  <a href="#name-batch-signing-for-code-sign" class="internal xref">Batch Signing for Code Signing Certificate Authorities</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5.2.2">
+                    <p id="section-toc.1-1.3.2.5.2.2.1"><a href="#section-3.5.2" class="auto internal xref">3.5.2</a>.  <a href="#name-the-case-for-transparency-i" class="internal xref">The Case for Transparency in Private PKI Code Signing</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5.2.3">
+                    <p id="section-toc.1-1.3.2.5.2.3.1"><a href="#section-3.5.3" class="auto internal xref">3.5.3</a>.  <a href="#name-transparency-log-requiremen" class="internal xref">Transparency Log Requirements for Code Signing</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5.2.4">
+                    <p id="section-toc.1-1.3.2.5.2.4.1"><a href="#section-3.5.4" class="auto internal xref">3.5.4</a>.  <a href="#name-independent-monitor" class="internal xref">Independent Monitor</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5.2.5">
+                    <p id="section-toc.1-1.3.2.5.2.5.1"><a href="#section-3.5.5" class="auto internal xref">3.5.5</a>.  <a href="#name-archival-obligations" class="internal xref">Archival Obligations</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-private-pki-pqc-migration-w" class="internal xref">Private PKI PQC Migration with Downgrade Resistance</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.1">
+                    <p id="section-toc.1-1.3.2.6.2.1.1"><a href="#section-3.6.1" class="auto internal xref">3.6.1</a>.  <a href="#name-active-downgrade-during-hyb" class="internal xref">Active Downgrade During Hybrid Deployment</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.2">
+                    <p id="section-toc.1-1.3.2.6.2.2.1"><a href="#section-3.6.2" class="auto internal xref">3.6.2</a>.  <a href="#name-harvest-now-decrypt-later" class="internal xref">Harvest Now Decrypt Later</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.3">
+                    <p id="section-toc.1-1.3.2.6.2.3.1"><a href="#section-3.6.3" class="auto internal xref">3.6.3</a>.  <a href="#name-unauthorized-classical-cert" class="internal xref">Unauthorized Classical Certificate Issuance During Migration</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.4">
+                    <p id="section-toc.1-1.3.2.6.2.4.1"><a href="#section-3.6.4" class="auto internal xref">3.6.4</a>.  <a href="#name-frozen-devices" class="internal xref">Frozen Devices</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.5">
+                    <p id="section-toc.1-1.3.2.6.2.5.1"><a href="#section-3.6.5" class="auto internal xref">3.6.5</a>.  <a href="#name-algorithm-metadata-requirem" class="internal xref">Algorithm Metadata Requirements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.6">
+                    <p id="section-toc.1-1.3.2.6.2.6.1"><a href="#section-3.6.6" class="auto internal xref">3.6.6</a>.  <a href="#name-migration-staging" class="internal xref">Migration Staging</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-constrained-device-certific" class="internal xref">Constrained Device Certificate Validation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.1">
+                    <p id="section-toc.1-1.3.2.7.2.1.1"><a href="#section-3.7.1" class="auto internal xref">3.7.1</a>.  <a href="#name-the-landmark-accumulation-p" class="internal xref">The Landmark Accumulation Problem</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.2">
+                    <p id="section-toc.1-1.3.2.7.2.2.1"><a href="#section-3.7.2" class="auto internal xref">3.7.2</a>.  <a href="#name-landmark-rebasing" class="internal xref">Landmark Rebasing</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.3">
+                    <p id="section-toc.1-1.3.2.7.2.3.1"><a href="#section-3.7.3" class="auto internal xref">3.7.3</a>.  <a href="#name-re-anchoring-after-extended" class="internal xref">Re-anchoring After Extended Offline Periods</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.4">
+                    <p id="section-toc.1-1.3.2.7.2.4.1"><a href="#section-3.7.4" class="auto internal xref">3.7.4</a>.  <a href="#name-guidance-for-pki-operators" class="internal xref">Guidance for PKI Operators</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">EdNote: Before getting into the nitty gritty, let's start with the potential benefit<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Merkle Tree Certificates (MTC) have been designed to solve two problems for the WebPKI:<a href="#section-1-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-1-3">
+<li id="section-1-3.1">
+          <p id="section-1-3.1.1"><strong>Size.</strong> A <em>landmark-relative Merkle Tree Certificate</em> is small as it
+  only contains a public key and a small Merkle Tree inclusion proof.<a href="#section-1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-1-3.2">
+          <p id="section-1-3.2.1"><strong>Downgrade Detection.</strong> MTC ensures Certificate Transparency is post-quantum secure, and with that
+allows detection of post-quantum downgrade attacks.<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<p id="section-1-4">Besides solving these two problems, MTC has additional benefits.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5"><strong>Batch Signing.</strong> MTC reduces the load on the CA because a single signature is used for a batch of certificates.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">A PKI that operates with any of these three challenges could benefit from MTC.
+These advantages come with trade-offs:<a href="#section-1-6" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-1-7">
+<li id="section-1-7.1">
+          <p id="section-1-7.1.1">The small <em>landmark-relative</em> MTCs can only be used if the verifier
+has been updated with recent <em>landmarks</em>. If the verifier is stale, it
+has to fall back to a larger <em>standalone</em> MTC or it will need a
+mechanism to be able to fetch the latest landmarks (refresh its
+state). The prover and verifier need a mechanism to negotiate whether
+to use the landmark-relative or standalone certificate.<a href="#section-1-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-1-7.2">
+          <p id="section-1-7.2.1">For downgrade detection, the issuer needs to publish a log of issued
+certificates.<a href="#section-1-7.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-1-7.3">
+          <p id="section-1-7.3.1">Batch sizing parameters will need to be carefully chosen to optimize
+system efficiency based on the particular use-case.<a href="#section-1-7.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<div id="brief-overview-of-mtc">
+<section id="section-1.1">
+        <h3 id="name-brief-overview-of-mtc">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-brief-overview-of-mtc" class="section-name selfRef">Brief overview of MTC</a>
+        </h3>
+<p id="section-1.1-1">A Merkle Tree Certificate is a regular X509 certificate with two
+differences:<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-1.1-2">
+<li id="section-1.1-2.1">
+            <p id="section-1.1-2.1.1">Instead of a single signature, an MTC can contain zero or more signatures:
+zero in the case of landmark-relative and one-or-more in case of standalone.
+One is by the issuer, and others are added when certificate transparency is required.<a href="#section-1.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-1.1-2.2">
+            <p id="section-1.1-2.2.1">The contents of the certificate is not signed directly, but instead
+a Merkle tree head is signed, together with providing a proof-of-inclusion
+of the certificate contents in that Merkle tree.<a href="#section-1.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-1.1-3">The use of a Merkle tree allows for batch signing, and the cost of a signature is
+amortized over the number of certificates at the leaf notes.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">If a verifier has out-of-band knowledge of the treehead used (which in
+that case is called a <em>landmark</em>), then it can be satisfied with
+the landmark-relative certificate that leaves out the signatures.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="batch-size-trade-offs">
+<section id="section-1.2">
+        <h3 id="name-batch-size-trade-offs">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-batch-size-trade-offs" class="section-name selfRef">Batch size trade-offs</a>
+        </h3>
+<p id="section-1.2-1">A PKI can make trade-offs when selecting MTC batch sizes for both
+checkpoints and landmarks.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">For checkpoints the trade-off is between computational cost of signatures and
+the size of standalone certificates. Smaller checkpoint batches require more
+frequent signatures, but reduce the size of the inclusion proofs for standalone
+certificates. Conversely, larger batches reduce the signature frequency but
+increase the size of inclusion proofs for standalone certificates.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">For landmarks the trade-offs are between relying party storage costs and the
+size of landmark-relative certificates. Fewer landmarks require less storage on
+the relying party, but result in each landmark representing a larger Merkle
+tree, which increases the size of the inclusion proof for the landmark-relative
+certificate. Conversely, more frequent landmarks would give smaller proofs for
+the landmark-relative certificate but require more storage on the relying party.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-4">Both batch sizes will be influenced by the specifics of the PKI, including the
+frequency of certificate signing requests and acceptable issuance latency.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="conventions-and-definitions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="use-cases">
+<section id="section-3">
+      <h2 id="name-use-cases">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-use-cases" class="section-name selfRef">Use cases</a>
+      </h2>
+<div id="verification-of-landmark-relative-merkle-tree-certificates-outside-the-webpki">
+<section id="section-3.1">
+        <h3 id="name-verification-of-landmark-re">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-verification-of-landmark-re" class="section-name selfRef">Verification of LandMark-Relative Merkle Tree Certificates outside the WebPKI</a>
+        </h3>
+<p id="section-3.1-1">Merkle Tree Certificates which only contain the inclusion proof
+to a signed tree head can only be verified when the verifier contains the
+landmark that completes the inclusion proof contained in the Certificate
+signature field.  If the certificate is in a non webPKI environment where it has an
+online connection it should be possible for the verifier to request a refresh
+of its landmarks.  There are different ways this can be accomplished:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.1-2">
+<li id="section-3.1-2.1">
+            <p id="section-3.1-2.1.1">It can be done dynamically, on demand by the verifier.  A mechanism
+that fetches landmarks from a distribution location could be added to
+the certificate which could be used to complete this lookup.  Such a
+mechanism could be similar to an X.509 CRLDP, except in this case it
+could be a "Landmark Distribution Point".<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1">The landmarks could be fetched periodically by the verifier (or a
+distribution system could push them down to the verifiers).<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-2.3">
+            <p id="section-3.1-2.3.1">They could be fetched by a locally defined policy.  For example they
+could be pre-shared at a location governed by a local policy.<a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<div id="landmark-distribution-point-fetching-mechanism">
+<section id="section-3.1.1">
+          <h4 id="name-landmark-distribution-point">
+<a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-landmark-distribution-point" class="section-name selfRef">Landmark Distribution Point Fetching Mechanism</a>
+          </h4>
+<p id="section-3.1.1-1">The ldpBaseURIs X509 V3 extension is held by the Issuer of the Signatureless
+   Merkle Tree Certificate and contains the SEQUENCE of LandmarkDistributionPoints, each
+   which is a LandmarkDistributionPoint of IA5String.  Each refers to a BaseURI location
+   indicating where the landmarks are published.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1.1-2">
+<pre>
+id-pe-ldpBaseURIs OBJECT IDENTIFIER ::=  { id-pe TBD }
+
+LandmarkDistributionPoints ::= SEQUENCE (1..MAX) OF LandmarkDistributionPoint
+
+LandmarkDistributionPoint ::= IA5String
+</pre><a href="#section-3.1.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1.1-3">The Inclusion Proof structure defined in I-D.ietf-plants-merkle-tree-certs
+   uses the following structure:<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1.1-4">
+<pre>
+struct {
+    uint64 start;
+    uint64 end;
+    HashValue inclusion_proof&lt;0..2^16-1&gt;;
+    MTCSignature signatures&lt;0..2^16-1&gt;;
+} MTCProof;
+</pre><a href="#section-3.1.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1.1-5">Note that it contains start and end values which indicate
+   the corresponding parameters of the chosen subtree.  To request the
+   required landmark, the client simply combines the URL as follows:<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6">LandmarkDistributionPoint?st=start?ed=end<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-7">This allows the verifier to request the required landmark so the
+   inclusion proof can be verified.<a href="#section-3.1.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-8">The verifier needs to trust the issuer as per RFC 5280.<a href="#section-3.1.1-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="format-of-landmark">
+<section id="section-3.1.2">
+          <h4 id="name-format-of-landmark">
+<a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-format-of-landmark" class="section-name selfRef">Format of Landmark</a>
+          </h4>
+<p id="section-3.1.2-1">The format of the landmark is defined in section 6.3.3
+of I-D.ietf-plants-merkle-tree-certs<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-2">As mentioned above, the verifier may need to request the landmark if it
+is not readily available.<a href="#section-3.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-3">This draft proposes an extension to the landmark format specified in section
+6.3.3 of I-D.ietf-plants-merkle-tree-certs which defines a mechanism for
+publishing active landmarks.<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-4">The current landmark format describes the tree sizes associated for each
+landmark.  However, it does not provide a mechanism for establishing a
+cryptographic relationship between a previously published landmark and a
+more recent landmark.  This document defines this mechanism as a Landmark
+subtree consistency Proof.  It includes carrying the necessary hashes so
+that there is a subtree consistency proof from one landmark to the next.
+The calculation of the subtree consistency proof from one landmark to the
+next can occur when a new landmark is published.  See section
+4.4 of I-D.ietf-plants-merkle-tree-certs for information on subtree
+consistency proofs.<a href="#section-3.1.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-5">This will allow for periodic and incremental updates for clients that need to
+request information from the LDP server.<a href="#section-3.1.2-5" class="pilcrow">¶</a></p>
+<div id="landmark-subtree-consistency-proof">
+<section id="section-3.1.2.1">
+            <h5 id="name-landmark-subtree-consistenc">
+<a href="#section-3.1.2.1" class="section-number selfRef">3.1.2.1. </a><a href="#name-landmark-subtree-consistenc" class="section-name selfRef">Landmark subtree consistency proof</a>
+            </h5>
+<p id="section-3.1.2.1-1">A verifier requesting updated landmarks may require a lot of new landmarks.
+Requiring the verifier to retrieve and validate every intermediate
+landmark would increase both network traffic and signature
+verification costs.<a href="#section-3.1.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-2">To address this problem, this document defines a
+LandmarkSubtreeProof object.  A LandmarkSubtreeProof provides cryptographic
+evidence that a source landmark identified by one tree size is incorporated
+into a target landmark identified by a larger tree size.<a href="#section-3.1.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-3">The LandmarkSubtreeProof does not modify the landmark publication
+format defined in Section 6.3.3.  Instead, it is published as a
+separate resource by the Landmark Distribution Point Server
+(LDP Server).<a href="#section-3.1.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-4">The LandmarkSubtreeProof structure is defined as follows:<a href="#section-3.1.2.1-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1.2.1-5">
+<pre>
+struct {
+    uint64 source_tree_size;
+    uint64 target_tree_size;
+
+    HashValue consistency_proof&lt;0..2^16-1&gt;;
+} LandmarkSubtreeProof;
+</pre><a href="#section-3.1.2.1-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1.2.1-6">Where:<a href="#section-3.1.2.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-7">source_tree_size (similar to start in MTCProof):
+   The tree size corresponding to the source landmark.<a href="#section-3.1.2.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-8">target_tree_size (similar to end in MTCProof):
+   The tree size corresponding to the target landmark.<a href="#section-3.1.2.1-8" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-9">consistency_proof:
+   A proof demonstrating that the source landmark tree is a
+   subtree of the target landmark tree.<a href="#section-3.1.2.1-9" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-10">The consistency_proof <span class="bcp14">SHALL</span> be constructed so that successful
+verification demonstrates that all entries represented by the
+source landmark are included in the target landmark and retain
+their original ordering and contents.<a href="#section-3.1.2.1-10" class="pilcrow">¶</a></p>
+<p id="section-3.1.2.1-11">A LandmarkProof <span class="bcp14">MAY</span> be generated when a new landmark is
+published and <span class="bcp14">MAY</span> be retained by the Landmark Distribution
+Point for subsequent retrieval by the verifier as needed.<a href="#section-3.1.2.1-11" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="landmark-subtree-proof-retrieval">
+<section id="section-3.1.3">
+          <h4 id="name-landmark-subtree-proof-retr">
+<a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-landmark-subtree-proof-retr" class="section-name selfRef">Landmark Subtree Proof Retrieval</a>
+          </h4>
+<p id="section-3.1.3-1">A verifier validating an MTCProof obtains the corresponding
+subtree information from the certificate and retrieves the
+associated landmark file as described in Section 6.3.3.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-2">If the verifier possesses a trusted landmark whose tree size is
+greater than the retrieved landmark's tree size, the verifier
+<span class="bcp14">MAY</span> obtain a set of LandmarkSubtreeProofSet connecting the two
+landmarks.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
+<div id="landmark-subtree-proof-set">
+<section id="section-3.1.3.1">
+            <h5 id="name-landmark-subtree-proof-set">
+<a href="#section-3.1.3.1" class="section-number selfRef">3.1.3.1. </a><a href="#name-landmark-subtree-proof-set" class="section-name selfRef">Landmark Subtree Proof Set</a>
+            </h5>
+<p id="section-3.1.3.1-1">A LandmarkSubtreeProofSet contains an ordered sequence of LandmarkSubtreeProof values. The first proof <span class="bcp14">SHALL</span> be verified against a trusted landmark root. Each subsequent proof <span class="bcp14">SHALL</span> be verified against the landmark root reconstructed from the preceding proof. Successful verification of all contained proofs establishes a cryptographic path from the trusted landmark to the target landmark.<a href="#section-3.1.3.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1.3.1-2">
+<pre>
+struct {
+    LandmarkSubtreeProof proofSet&lt;0..2^16-1&gt;;
+} LandmarkSubtreeProofSet;
+</pre><a href="#section-3.1.3.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1.3.1-3">One possible retrieval mechanism is:<a href="#section-3.1.3.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1.3.1-4">
+<pre>
+LandmarkDistributionPoint?
+    source=&lt;source_tree_size&gt;&amp;
+    target=&lt;target_tree_size&gt;
+</pre><a href="#section-3.1.3.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1.3.1-5">TODO:  Agree on the URI format<a href="#section-3.1.3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.3.1-6">The Landmark Distribution Point Server <span class="bcp14">SHALL</span> return a
+LandmarkSubtreeProofSet capable of demonstrating that the source landmark is
+incorporated into the target landmark.<a href="#section-3.1.3.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="validation-procedure">
+<section id="section-3.1.4">
+          <h4 id="name-validation-procedure">
+<a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-validation-procedure" class="section-name selfRef">Validation Procedure</a>
+          </h4>
+<p id="section-3.1.4-1">A verifier <span class="bcp14">SHALL</span> perform the following steps:<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.1.4-2">
+<li id="section-3.1.4-2.1">
+              <p id="section-3.1.4-2.1.1">Extract the <code>start</code> and <code>end</code> values from the MTCProof.<a href="#section-3.1.4-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.2">
+              <p id="section-3.1.4-2.2.1">Retrieve the landmark file corresponding to the authenticated
+subtree by contacting the LDP server (or retrieving it
+from a local cache).<a href="#section-3.1.4-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.3">
+              <p id="section-3.1.4-2.3.1">Obtain a trusted target landmark if one is not already
+cached. For example, a likely candidate would be the latest
+landmark referenced by the Landmark File.<a href="#section-3.1.4-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.4">
+              <p id="section-3.1.4-2.4.1">Verify the signature(s) associated with the trusted target
+landmark.  If signature verification fails, the verifier <span class="bcp14">MUST</span>
+reject the certificate.<a href="#section-3.1.4-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.5">
+              <p id="section-3.1.4-2.5.1">If the source subtree landmark and trusted target landmark differ,
+retrieve a LandmarkSubtreeProofSet that establishes a
+sequence of authenticated subtree transitions between the
+source landmark and the trusted target landmark.<a href="#section-3.1.4-2.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.6">
+              <p id="section-3.1.4-2.6.1">Verify each LandmarkSubtreeProof contained in the
+LandmarkSubtreeProofSet in the order in which it appears.
+The first proof <span class="bcp14">SHALL</span> be verified against the source
+landmark. Each subsequent proof <span class="bcp14">SHALL</span> be verified against
+the landmark root reconstructed from the preceding proof.<a href="#section-3.1.4-2.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.7">
+              <p id="section-3.1.4-2.7.1">Successful verification of the complete
+LandmarkSubtreeProofSet <span class="bcp14">SHALL</span> establish that the source
+landmark tree is a cryptographic prefix of the trusted
+target landmark tree.<a href="#section-3.1.4-2.7.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.8">
+              <p id="section-3.1.4-2.8.1">Use the validated source landmark to verify the Inclusion
+Proof contained within the MTCProof.<a href="#section-3.1.4-2.8.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.1.4-2.9">
+              <p id="section-3.1.4-2.9.1">Accept the certificate if all verification steps succeed.<a href="#section-3.1.4-2.9.1" class="pilcrow">¶</a></p>
+</li>
+          </ol>
+<p id="section-3.1.4-3">Successful completion of this procedure establishes that the
+certificate entry is included in the authenticated subtree
+identified by the source landmark and that the source landmark
+is cryptographically bound via the verified LandmarkSubtreeProofSet
+to the trusted target landmark.<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="efficiency-considerations">
+<section id="section-3.1.5">
+          <h4 id="name-efficiency-considerations">
+<a href="#section-3.1.5" class="section-number selfRef">3.1.5. </a><a href="#name-efficiency-considerations" class="section-name selfRef">Efficiency Considerations</a>
+          </h4>
+<p id="section-3.1.5-1">The purpose of LandmarkSubtreeProofs is to reduce the number of
+landmarks and signatures that must be processed by a verifier.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-2">Without LandmarkSubtreeProofs, a verifier may be required to retrieve
+multiple intermediate landmarks and validate the signatures
+associated with each landmark before reaching a currently
+trusted landmark.<a href="#section-3.1.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-3">With LandmarkProofs, a verifier requires only:<a href="#section-3.1.5-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.5-4.1">
+              <p id="section-3.1.5-4.1.1">the source landmark;<a href="#section-3.1.5-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.5-4.2">
+              <p id="section-3.1.5-4.2.1">the trusted target landmark; and<a href="#section-3.1.5-4.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.5-4.3">
+              <p id="section-3.1.5-4.3.1">a LandmarkSubtreeProofSet connecting the corresponding tree sizes.<a href="#section-3.1.5-4.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.1.5-5">As a result, the number of signature verification operations is
+independent of the number of intermediate landmarks published
+between the source and target landmarks.<a href="#section-3.1.5-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-6">This property is particularly beneficial when signatures are
+generated using computationally expensive algorithms,
+including post-quantum signature algorithms.<a href="#section-3.1.5-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="skip-links-for-efficiency">
+<section id="section-3.1.6">
+          <h4 id="name-skip-links-for-efficiency">
+<a href="#section-3.1.6" class="section-number selfRef">3.1.6. </a><a href="#name-skip-links-for-efficiency" class="section-name selfRef">Skip links for efficiency</a>
+          </h4>
+<p id="section-3.1.6-1">TODO:  Generating the consistency proof at the LDP server introduces an O(N^2) problem.  For efficiency, we likely want to cache landmark proofs as they are generated between each landmark.  For example 1-&gt;2, 2-&gt;3, 3-&gt;4 but also 1-&gt;3, 1-4, 2-4.  Thus O(n^2).  A better approach is to use a skip link which only generates O(Log(num_landmarks)) for each landmark.  For example, a system that issued a landmark every hour for 10 years would have 87,600 landmarks.  When landmark 87,601 is created, only 17 landmark proofs will need to be created.  It would also reduce the LandmarkSubtreeProofSet from O(num_landmarks) to O(Log(num_landmarks), greatly reducing bandwidth requirements!<a href="#section-3.1.6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="more-items-to-be-discussed">
+<section id="section-3.1.7">
+          <h4 id="name-more-items-to-be-discussed">
+<a href="#section-3.1.7" class="section-number selfRef">3.1.7. </a><a href="#name-more-items-to-be-discussed" class="section-name selfRef">More items to be discussed:</a>
+          </h4>
+<ul class="normal">
+<li class="normal" id="section-3.1.7-1.1">
+              <p id="section-3.1.7-1.1.1">When a CA issues an MTC certificate, it will decide where the landmark will be published.  It needs to provide the LDP service.<a href="#section-3.1.7-1.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.7-1.2">
+              <p id="section-3.1.7-1.2.1">Current format uses start and end values from the inclusion proof.  This is nice because no other extension is needed in the EE certs<a href="#section-3.1.7-1.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.7-1.3">
+              <p id="section-3.1.7-1.3.1">Landmarks should be available in a predictable way.  The above format should meet this requirement.<a href="#section-3.1.7-1.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.7-1.4">
+              <p id="section-3.1.7-1.4.1">Do Landmark's contain a signature, or is it just the MTH and we use the cumulative landmarks along with the inclusion proof?<a href="#section-3.1.7-1.4.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.7-1.4.2.1">
+                  <p id="section-3.1.7-1.4.2.1.1">A:  No, there is one trusted target that contains a signature.  That trusted target should be cached so that the full PQ signatures doesn't need to be continually downloaded.  This is where MTC gets its efficiency.<a href="#section-3.1.7-1.4.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</li>
+            <li class="normal" id="section-3.1.7-1.5">
+              <p id="section-3.1.7-1.5.1">Is there a repository of test landmark certificates that we can use to test this mechanism?<a href="#section-3.1.7-1.5.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.7-1.5.2.1">
+                  <p id="section-3.1.7-1.5.2.1.1">A:  Seems like a good hackathon project!<a href="#section-3.1.7-1.5.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</li>
+          </ul>
+</section>
+</div>
+<div id="landmark-distribution-server">
+<section id="section-3.1.8">
+          <h4 id="name-landmark-distribution-serve">
+<a href="#section-3.1.8" class="section-number selfRef">3.1.8. </a><a href="#name-landmark-distribution-serve" class="section-name selfRef">Landmark Distribution server</a>
+          </h4>
+<p id="section-3.1.8-1">As mentioned above, the landmarks can be fetched dynamically as needed by
+combining the start and end values from the MTCProof.  The LDP server fulfilling
+these requests will need to parse the start and end values, aggregate the
+require landmark subtrees together, and send the responce back to the client.
+The responce format will be:<a href="#section-3.1.8-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.8-2">TODO:  DEFINE responce format<a href="#section-3.1.8-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="batching-for-performance-optimization">
+<section id="section-3.2">
+        <h3 id="name-batching-for-performance-op">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-batching-for-performance-op" class="section-name selfRef">Batching for performance optimization</a>
+        </h3>
+<p id="section-3.2-1"><strong>When</strong>
+Signatures are expensive computational operations.  Systems where
+high signature throughput is important are good candidates for the use
+of batch signing, as it can provide a sizeable performance optimization
+(for example, device certificates).  Merkle Trees with leaves of size N
+can be computed as hashes of the toBeSigned data, with a single signature
+over the root of that Merkle Tree.  For example, a Merkle tree of size
+2^12 would have 2^11 leaves and could represent 2048 signatures.  The
+verifier would only need to create a single signature for each batch
+of 2048 toBeSigned data values.  Larger sizes could be used to meet the
+operational requirements of the system.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2"><strong>Requirements</strong>
+The verifier could use the mechanism defined in "Verification of
+signatureless Merkle Tree Certificates" above to verifiy the signature
+when certificates are used.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">TODO:  If a certificate is not used, the same kind of fetching mechanism
+would be needed for the verifier but that would need to be provided by
+some out-of-band mechanism.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="just-using-transparency">
+<section id="section-3.3">
+        <h3 id="name-just-using-transparency">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-just-using-transparency" class="section-name selfRef">Just using transparency</a>
+        </h3>
+<p id="section-3.3-1">TODO - discuss advantages of transparency logs
+- Track mis-issued certificates in your private key
+- CA's already have an audit trail - is there an advantage to using transparency logs
+- Need a source of truth for cross checking<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="certificate-revocation">
+<section id="section-3.4">
+        <h3 id="name-certificate-revocation">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-certificate-revocation" class="section-name selfRef">Certificate Revocation</a>
+        </h3>
+<p id="section-3.4-1">If a certificate is compromised, mis-issued or no longer trustworthy, revocation is
+a mechanism that allows a certificate to be declared invalid.  It is a critical part
+of RFC 5280 path building, and is required to support long-lived certificates in a
+private PKI infrastructure.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">The two main types of revocation in use today are Certificate Revocation Lists (CRLs)
+and OCSP (On-line certificate status Protocol).  A Certificate Revocation List (CRL)
+is a digitally signed list published by a CA that identifies certificates that have
+been revoked and should no longer be trusted before their expiration date.  Over time
+they become large and stale, and require periodic download leading to increased
+bandwidth, latency and delayed revocation awareness. OCSP creates individual proofs
+for each certificate, requiring an updated signature for every updated request or
+change in status of a certificate revocation.  In the context of much larger PQ
+signatures like ML-DSA, a single revocation check increases from about 400 bytes to
+around 4kb, which is 8 to 10 times larger!<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.4-3">Merkle Tree-based revocation can be significantly more efficient than CRL and OCSP by
+effectively using small cryptographic proof sizes along with batch signing.  For
+example, in OCSP each proof is signed, in Merkle Tree Revocation, each proof becomes
+a leaf-hash in the Merkle Tree.  A relying party only needs a small cryptographic
+proof, typically logarithmic in the number of certificates, rather than downloading
+an entire revocation list or contacting an online responder for each validation. This
+reduces bandwidth consumption, eliminates dependence on highly available OCSP
+infrastructure, and enables offline verification. As the number of revoked
+certificates grows, Merkle proofs remain compact and scalable, making them
+particularly attractive for large PKI deployments and post-quantum environments where
+revocation artifacts and signatures may be substantially larger.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="code-signing-and-software-supply-chain-integrity">
+<section id="section-3.5">
+        <h3 id="name-code-signing-and-software-s">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-code-signing-and-software-s" class="section-name selfRef">Code Signing and Software Supply Chain Integrity</a>
+        </h3>
+<p id="section-3.5-1">The verification model for code signing differs fundamentally from TLS.  In a TLS
+handshake, the server is present at verification time and format negotiation between
+prover and verifier is possible.  A signed artifact is a static object: a binary,
+container image or firmware update is signed once and subsequently verified at
+deployment or execution time, potentially on a system with no network access and
+potentially years after the signing event.  No live channel exists between the signer
+and the verifier at the time of verification.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2">This distinction has a direct consequence for MTC deployment in code signing contexts.
+Landmark-relative certificates require the verifier to hold a cached landmark at the
+time of verification.  A verifier operating on an air-gapped system, or validating an
+artifact whose issuing CA has since been decommissioned, cannot be assumed to maintain
+a current landmark cache.  Standalone MTCs <span class="bcp14">SHOULD</span> be used for code signing artifacts.
+A standalone MTC carries the CA signature inline and can be verified using only the CA
+public key held as a locally-configured trust anchor, with no network access required.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">The certificate size reduction that motivates landmark-relative certificates in TLS is
+not a meaningful consideration in code signing.  A post-quantum CA signature embedded
+in a binary of tens to hundreds of megabytes represents negligible overhead.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<div id="batch-signing-for-code-signing-certificate-authorities">
+<section id="section-3.5.1">
+          <h4 id="name-batch-signing-for-code-sign">
+<a href="#section-3.5.1" class="section-number selfRef">3.5.1. </a><a href="#name-batch-signing-for-code-sign" class="section-name selfRef">Batch Signing for Code Signing Certificate Authorities</a>
+          </h4>
+<p id="section-3.5.1-1">A code signing CA serving a large enterprise or a high-throughput CI/CD environment
+may issue signing certificates at a volume that places real throughput demands on its
+signing infrastructure.  With post-quantum signature algorithms, the per-operation
+signing cost increases relative to classical algorithms.  MTC batch signing amortizes
+this cost: the CA constructs a Merkle tree over a batch of certificate requests,
+produces a single signature over the tree root and issues each certificate with its
+inclusion proof.  The number of CA signing operations is reduced by a factor equal to
+the batch size, independent of the algorithm used to produce the root signature.<a href="#section-3.5.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.5.1-2">Code signing CAs <span class="bcp14">SHOULD</span> select batch sizes with reference to peak certificate issuance
+volume and acceptable issuance latency.  Guidance on batch size trade-offs is provided
+in Section 1.2 of this document.<a href="#section-3.5.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="the-case-for-transparency-in-private-pki-code-signing">
+<section id="section-3.5.2">
+          <h4 id="name-the-case-for-transparency-i">
+<a href="#section-3.5.2" class="section-number selfRef">3.5.2. </a><a href="#name-the-case-for-transparency-i" class="section-name selfRef">The Case for Transparency in Private PKI Code Signing</a>
+          </h4>
+<p id="section-3.5.2-1">Private PKI code signing operates without any transparency requirement today.
+Certificates issued by an enterprise CA for signing purposes are not recorded in any
+independently accessible log.  This differs from Web PKI TLS certificates, which must
+be disclosed to public Certificate Transparency logs as a condition of browser trust.
+Code signing certificates issued by public CAs are also outside the scope of existing
+Certificate Transparency requirements.<a href="#section-3.5.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.5.2-2">The absence of transparency creates a specific structural vulnerability.  A CA audit
+database is an asset under the administrative control of the PKI operator.  An attacker
+who has obtained administrative access to the CA, or a privileged insider, can issue
+signing certificates to unauthorized entities and subsequently modify the audit database
+to suppress evidence of those issuances.  Because the CA and its audit database share
+an administrative boundary, the audit database does not constitute an independent check
+on CA behavior.<a href="#section-3.5.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.5.2-3">An MTC transparency log operated independently from the issuing CA addresses this gap.
+The Merkle-tree structure of the log means that once a batch tree head is signed and
+published, any modification to prior log entries breaks the cryptographic chain.  An
+independent party retaining a copy of published tree heads at any point can detect
+subsequent modification.  This property holds even when the CA infrastructure is
+subsequently compromised, because the log operator and the CA operator are separate
+administrative entities.<a href="#section-3.5.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.5.2-4">Recent software supply chain compromises have followed this pattern: the signing
+certificate was valid, the artifact signatures were valid and no PKI mechanism existed
+to detect anomalous signing activity prior to discovery through behavioral indicators.
+An independently operated transparency log changes this property.  Any use of a
+compromised or fraudulently issued signing certificate produces a record that cannot
+be erased without detection by any party that has retained log state.<a href="#section-3.5.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="transparency-log-requirements-for-code-signing">
+<section id="section-3.5.3">
+          <h4 id="name-transparency-log-requiremen">
+<a href="#section-3.5.3" class="section-number selfRef">3.5.3. </a><a href="#name-transparency-log-requiremen" class="section-name selfRef">Transparency Log Requirements for Code Signing</a>
+          </h4>
+<p id="section-3.5.3-1">For the transparency log to support anomaly detection and post-incident forensics in
+code signing deployments, the log <span class="bcp14">MUST</span> record the following information per batch: the
+signing algorithm used to produce the batch tree head signature, the timestamp of batch
+creation and the issuing CA identity.  Per certificate entry, the log <span class="bcp14">MUST</span> record the
+subject identity, the subject public key algorithm, key usage extension values and the
+certificate validity period.<a href="#section-3.5.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.5.3-2">Per-certificate algorithm metadata is required for post-quantum migration auditing.  An
+organization asserting that its code signing infrastructure issued only post-quantum
+certificates from a given date must be able to demonstrate this from the log record,
+with cryptographic verifiability that an audit database alone cannot provide.<a href="#section-3.5.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.5.3-3">The following structures define the information model for a code signing log entry.
+Two-level recording is used: one record per batch captures the batch-level signing
+metadata, and one record per certificate captures the subject-level metadata needed
+for monitor evaluation and forensic queries.<a href="#section-3.5.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.5.3-4">
+<pre>
+struct CertMetadata {
+    opaque subject_identity&lt;0..2^16-1&gt;;
+    PublicKeyAlgorithm subject_key_algorithm;
+    uint16 key_usage_flags;
+    uint64 not_before;
+    uint64 not_after;
+    uint64 leaf_index;
+}
+
+struct CodeSigningLogEntry {
+    uint64 batch_id;
+    uint64 timestamp;
+    SignatureAlgorithm batch_signing_algorithm;
+    HashValue batch_tree_head;
+    opaque issuing_ca_identity&lt;0..2^16-1&gt;;
+    CertMetadata cert_entries&lt;0..2^32-1&gt;;
+}
+</pre><a href="#section-3.5.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.5.3-5">A signing receipt is the artifact-embedded object that binds a signed binary, container
+image or firmware update to a specific log entry.  The receipt travels inside the
+artifact's signature container alongside the standalone MTC.  A verifier extracts the
+receipt, verifies the batch_root_signature against the locally-held CA trust anchor,
+and then verifies the inclusion_proof to confirm that the signing certificate is a leaf
+in the identified batch.<a href="#section-3.5.3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.5.3-6">
+<pre>
+struct SigningReceipt {
+    uint64 batch_id;
+    uint64 leaf_index;
+    HashValue inclusion_proof&lt;0..2^16-1&gt;;
+    MTCSignature batch_root_signature;
+    uint64 log_commit_timestamp;
+    opaque log_operator_id&lt;0..2^16-1&gt;;
+}
+</pre><a href="#section-3.5.3-6" class="pilcrow">¶</a>
+</div>
+<p id="section-3.5.3-7">When a CA transitions its batch signing from one algorithm class to another, it <span class="bcp14">MUST</span>
+publish an AlgorithmTransitionEvent to the transparency log before the first batch
+signed under the new algorithm is distributed.  The ca_assertion_signature field is
+produced by the CA over the remaining fields of the structure, using the signing key
+corresponding to the new_batch_algorithm, providing cryptographic proof that the CA
+holding the new key has authorized the transition record.<a href="#section-3.5.3-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.5.3-8">
+<pre>
+struct AlgorithmTransitionEvent {
+    uint64 effective_batch_id;
+    uint64 timestamp;
+    SignatureAlgorithm previous_batch_algorithm;
+    SignatureAlgorithm new_batch_algorithm;
+    opaque ca_identity&lt;0..2^16-1&gt;;
+    MTCSignature ca_assertion_signature;
+}
+</pre><a href="#section-3.5.3-8" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="independent-monitor">
+<section id="section-3.5.4">
+          <h4 id="name-independent-monitor">
+<a href="#section-3.5.4" class="section-number selfRef">3.5.4. </a><a href="#name-independent-monitor" class="section-name selfRef">Independent Monitor</a>
+          </h4>
+<p id="section-3.5.4-1">The transparency log for private PKI code signing <span class="bcp14">MUST</span> be operated independently from
+the issuing CA.  A log under the administrative control of the CA operator does not
+provide an independent check against the threats described in this section.<a href="#section-3.5.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.5.4-2">An independent monitor consuming the log <span class="bcp14">SHOULD</span> maintain an authoritative register of
+entities authorized to hold signing certificates and the algorithm classes they are
+authorized to use.  The monitor <span class="bcp14">SHOULD</span> alert on: issuance of a signing certificate to
+an entity absent from the authorization register; issuance of a classical algorithm
+signing certificate to an entity recorded as having completed migration to post-quantum
+algorithms; and any unexplained reduction in post-quantum algorithm usage across
+successive batches.<a href="#section-3.5.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.5.4-3">The MonitorAlert structure defines the information model for an alert raised by the
+independent monitor.  The evidence_log_reference field carries a reference to the
+specific CodeSigningLogEntry or AlgorithmTransitionEvent that triggered the alert,
+allowing the recipient to independently verify the raw log data.<a href="#section-3.5.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.5.4-4">
+<pre>
+enum AlertType {
+    UNAUTHORIZED_ISSUANCE,
+    ALGORITHM_DOWNGRADE,
+    MIGRATION_REGRESSION,
+    FROZEN_DEVICE_ANOMALY
+}
+
+struct MonitorAlert {
+    AlertType alert_type;
+    opaque subject_identity&lt;0..2^16-1&gt;;
+    uint64 batch_id;
+    uint64 leaf_index;
+    uint64 detection_timestamp;
+    opaque evidence_log_reference&lt;0..2^16-1&gt;;
+}
+</pre><a href="#section-3.5.4-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="archival-obligations">
+<section id="section-3.5.5">
+          <h4 id="name-archival-obligations">
+<a href="#section-3.5.5" class="section-number selfRef">3.5.5. </a><a href="#name-archival-obligations" class="section-name selfRef">Archival Obligations</a>
+          </h4>
+<p id="section-3.5.5-1">Signed artifacts may require verification throughout their operational lifetime, which
+in enterprise deployments can span years.  A CA issuing signing certificates <span class="bcp14">MUST</span> retain
+accessible archives of all published batch tree heads for a period not less than the
+maximum validity period of any certificate in the corresponding batch.  These archives
+<span class="bcp14">MUST</span> remain accessible following the decommissioning of the issuing CA and <span class="bcp14">MUST NOT</span>
+share infrastructure with the live issuing CA.<a href="#section-3.5.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="private-pki-pqc-migration-with-downgrade-resistance">
+<section id="section-3.6">
+        <h3 id="name-private-pki-pqc-migration-w">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-private-pki-pqc-migration-w" class="section-name selfRef">Private PKI PQC Migration with Downgrade Resistance</a>
+        </h3>
+<p id="section-3.6-1">The first post-quantum cryptographic algorithm standards were published by NIST in 2024,
+including ML-DSA (FIPS 204), ML-KEM (FIPS 203) and SLH-DSA (FIPS 205).  Enterprises
+operating private PKIs are under increasing regulatory pressure to migrate from classical
+algorithms.  This migration cannot be completed instantaneously.  A private PKI
+environment typically includes endpoints with varying post-quantum readiness, and some
+endpoints may be incapable of post-quantum algorithm support for their operational
+lifetime.  The period during which both classical and post-quantum certificates are
+simultaneously in active use is the hybrid transition period.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-2">The hybrid transition period creates attack opportunities that do not exist in a fully
+migrated environment.  This section describes those threats and the capabilities MTC
+provides to detect them.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
+<div id="active-downgrade-during-hybrid-deployment">
+<section id="section-3.6.1">
+          <h4 id="name-active-downgrade-during-hyb">
+<a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-active-downgrade-during-hyb" class="section-name selfRef">Active Downgrade During Hybrid Deployment</a>
+          </h4>
+<p id="section-3.6.1-1">When a server holds a post-quantum certificate and also supports classical algorithm
+fallback for legacy clients, a network-positioned adversary may suppress post-quantum
+algorithm negotiation during connection establishment.  The server completes the
+connection using classical algorithms.  Both endpoints complete the exchange without
+error and neither endpoint produces any observable indication that the negotiated
+algorithm set differs from what the server would prefer.<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-2">In Web PKI, mechanisms such as strict transport security and browser-enforced algorithm
+policy provide partial protection against this class of attack.  Private PKI
+deployments, including internal service communication, enterprise VPN infrastructure
+and industrial protocol endpoints, do not benefit from equivalent enforcement
+mechanisms.  Classical fallback paths persist in private PKI environments for as long
+as any endpoint requires classical support, and an adversary aware of this fact can
+exploit those paths selectively and systematically.<a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-3">MTC transparency provides post-hoc detection capability for this threat.  When the
+transparency log records that a server held a post-quantum certificate during a given
+period and operational logs from that period show only classical algorithm connections
+to that server, this discrepancy constitutes evidence of systematic downgrade.  The
+transparency record does not prevent the downgrade in real time, but it enables
+detection and scoping of the compromise through records maintained independently of
+the endpoints involved.<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="harvest-now-decrypt-later">
+<section id="section-3.6.2">
+          <h4 id="name-harvest-now-decrypt-later">
+<a href="#section-3.6.2" class="section-number selfRef">3.6.2. </a><a href="#name-harvest-now-decrypt-later" class="section-name selfRef">Harvest Now Decrypt Later</a>
+          </h4>
+<p id="section-3.6.2-1">Adversaries may record encrypted private PKI traffic with the intent to decrypt it
+when quantum computing capabilities become sufficient.  For communications whose
+confidentiality requirements extend beyond the expected availability of a
+cryptographically relevant quantum computer, traffic captured today represents a
+future liability.  Private PKI protects communications that may retain sensitivity
+for a decade or more: personnel records, financial transactions, intellectual property
+and industrial control system telemetry.  The effective migration deadline for such
+data is not solely the date of quantum computer availability, but the date by which
+the protected data will have lost its sensitivity.<a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-2">The MTC transparency log does not prevent traffic capture.  It provides a verifiable
+record of when post-quantum algorithm adoption occurred across the PKI, enabling an
+organization to demonstrate with cryptographic verifiability that sensitive
+communications were protected by post-quantum algorithms from a documented date.
+This record is relevant to regulatory compliance frameworks that require evidence of
+completed migration rather than assertions about future intent.<a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="unauthorized-classical-certificate-issuance-during-migration">
+<section id="section-3.6.3">
+          <h4 id="name-unauthorized-classical-cert">
+<a href="#section-3.6.3" class="section-number selfRef">3.6.3. </a><a href="#name-unauthorized-classical-cert" class="section-name selfRef">Unauthorized Classical Certificate Issuance During Migration</a>
+          </h4>
+<p id="section-3.6.3-1">An entity that has completed migration to post-quantum algorithms should no longer
+receive classical algorithm certificates.  During the hybrid transition period,
+however, a CA operating both issuance paths may issue a classical certificate to such
+an entity through misconfiguration, policy error or deliberate action.  A classical
+certificate issued to an entity that accepts only post-quantum certificates can be
+used to intercept communications from any relying party that retains classical
+certificate trust.<a href="#section-3.6.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-2">A transparency log with an independent monitor maintaining an authoritative migration
+status register enables detection of this event.  The monitor can identify any
+classical certificate issuance to an entity recorded as having completed migration
+and raise an alert before the certificate is deployed.<a href="#section-3.6.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.3-3">The MigrationStatusEntry structure defines the information model for a single entry
+in the migration status register.  The status field records the current migration
+state of the subject.  The status_effective_date field records the date from which
+the recorded status applies, enabling the monitor to correctly classify certificate
+issuances that predate a status change.  The policy_reference field carries an
+opaque reference to the organizational policy or administrative record that authorized
+the recorded status, providing an audit trail for register entries.<a href="#section-3.6.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.3-4">
+<pre>
+enum MigrationStatus {
+    CLASSICAL_ONLY,
+    HYBRID,
+    PQ_ONLY,
+    FROZEN
+}
+
+struct MigrationStatusEntry {
+    opaque subject_identity&lt;0..2^16-1&gt;;
+    MigrationStatus status;
+    uint64 status_effective_date;
+    opaque policy_reference&lt;0..2^16-1&gt;;
+}
+</pre><a href="#section-3.6.3-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="frozen-devices">
+<section id="section-3.6.4">
+          <h4 id="name-frozen-devices">
+<a href="#section-3.6.4" class="section-number selfRef">3.6.4. </a><a href="#name-frozen-devices" class="section-name selfRef">Frozen Devices</a>
+          </h4>
+<p id="section-3.6.4-1">Certain devices in private PKI environments cannot receive updates that would add
+post-quantum algorithm support.  Regulatory re-approval requirements, sealed hardware
+and immovable service constraints mean that some endpoints will continue to use
+classical algorithm certificates for the duration of their service lives, regardless
+of the broader migration status of the PKI.<a href="#section-3.6.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.4-2">These devices need not implement MTC.  The transparency log supports a monitoring
+pattern for frozen device populations in which the CA records classical certificate
+issuances for frozen device identifiers and an independent monitor watches those
+identifiers for anomalous activity.  The monitor can alert if a classical certificate
+is issued for a frozen device identifier by an unexpected CA or with unexpected
+attributes.  The monitoring operates independently of the device and provides detection
+capability without requiring any modification to device firmware or software.<a href="#section-3.6.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.4-3">A FrozenDeviceRecord is a signed assertion by the PKI operator that a specific device
+identity is designated as a frozen endpoint.  The record identifies the single CA
+authorized to issue classical certificates for the device and the specific algorithm
+permitted for those certificates.  The monitor <span class="bcp14">MUST</span> reject any classical certificate
+issuance for a frozen device identity that does not match the authorized_issuer_ca_identity
+and permitted_key_algorithm fields of the corresponding FrozenDeviceRecord.  The
+operator_signature field is produced by the PKI operator over the remaining fields of
+the structure, using a key whose public counterpart is held in the monitor's trust
+configuration.<a href="#section-3.6.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6.4-4">
+<pre>
+struct FrozenDeviceRecord {
+    opaque device_identity&lt;0..2^16-1&gt;;
+    opaque authorized_issuer_ca_identity&lt;0..2^16-1&gt;;
+    PublicKeyAlgorithm permitted_key_algorithm;
+    uint64 record_effective_date;
+    uint64 record_expiry_date;
+    MTCSignature operator_signature;
+}
+</pre><a href="#section-3.6.4-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="algorithm-metadata-requirements">
+<section id="section-3.6.5">
+          <h4 id="name-algorithm-metadata-requirem">
+<a href="#section-3.6.5" class="section-number selfRef">3.6.5. </a><a href="#name-algorithm-metadata-requirem" class="section-name selfRef">Algorithm Metadata Requirements</a>
+          </h4>
+<p id="section-3.6.5-1">For the transparency log to support the use cases described in this section, the log
+<span class="bcp14">MUST</span> record the signing algorithm used to produce each batch tree head signature and
+the subject public key algorithm for each certificate in each batch.  Per-certificate
+algorithm metadata is required because a CA operating during the hybrid transition
+period may issue both classical and post-quantum certificates within the same batch.<a href="#section-3.6.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.5-2">A CA transitioning between algorithm classes in batch signing <span class="bcp14">MUST</span> record each
+transition as a distinct log event with a timestamp.  These records constitute the
+verifiable migration timeline that regulatory compliance requirements may demand.<a href="#section-3.6.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.5-3">The AlgorithmTransitionEvent structure defined in Section 3.3 is reused here for
+recording batch signing algorithm transitions in the PQC migration context.  For
+migration auditing purposes, a monitor querying the log for AlgorithmTransitionEvent
+entries can reconstruct the complete algorithm transition history for any CA, with
+each transition cryptographically bound to the batch at which it took effect.<a href="#section-3.6.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.6.5-4">In addition to batch-level transitions, the log entry for each certificate <span class="bcp14">MUST</span>
+carry the subject public key algorithm, as defined in the CertMetadata structure
+in Section 3.3.  The monitor evaluates per-certificate algorithm metadata against
+the MigrationStatusEntry for each subject to detect unauthorized classical issuance
+during the transition period.<a href="#section-3.6.5-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="migration-staging">
+<section id="section-3.6.6">
+          <h4 id="name-migration-staging">
+<a href="#section-3.6.6" class="section-number selfRef">3.6.6. </a><a href="#name-migration-staging" class="section-name selfRef">Migration Staging</a>
+          </h4>
+<p id="section-3.6.6-1">A private PKI operator deploying MTC during the post-quantum transition period should
+proceed through distinct stages.  In the first stage, MTC infrastructure is deployed
+with classical batch signing.  The transparency log is operational and all certificate
+issuances are recorded, establishing the baseline against which migration progress is
+measured.  In the second stage, batch tree head signing transitions to hybrid signatures
+incorporating both classical and post-quantum algorithms.  Certificate-level algorithm
+migration proceeds at a pace determined by endpoint readiness.  In the third stage,
+post-quantum-only batch signing is adopted and the transparency log records this
+transition with a timestamp that constitutes the verifiable PQC migration completion
+date for the batch signing infrastructure.  In the fourth stage, classical algorithm
+certificate issuance is discontinued except for designated frozen device populations,
+and the log provides ongoing monitoring capability for those populations.<a href="#section-3.6.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.6-2">The duration of each stage depends on the specific PKI deployment, the endpoint
+population capabilities and applicable regulatory requirements.<a href="#section-3.6.6-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="constrained-device-certificate-validation">
+<section id="section-3.7">
+        <h3 id="name-constrained-device-certific">
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-constrained-device-certific" class="section-name selfRef">Constrained Device Certificate Validation</a>
+        </h3>
+<p id="section-3.7-1">Private PKI deployments include endpoint populations with constraints on available
+memory, processing capacity and network access.  Access control readers validating
+employee identity credentials, sensors on isolated operational technology networks
+and embedded controllers in long-lived infrastructure may need to validate
+certificates issued over an extended time window, potentially spanning years, without
+the ability to maintain a continuously updated landmark cache or retrieve landmarks
+on demand.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2">This use case is distinct from the landmark distribution use case in Section 3.1,
+which addresses endpoints with network connectivity capable of fetching landmarks as
+needed.  This section addresses endpoints for which neither real-time landmark
+retrieval nor continuous landmark cache maintenance can be assumed.<a href="#section-3.7-2" class="pilcrow">¶</a></p>
+<div id="the-landmark-accumulation-problem">
+<section id="section-3.7.1">
+          <h4 id="name-the-landmark-accumulation-p">
+<a href="#section-3.7.1" class="section-number selfRef">3.7.1. </a><a href="#name-the-landmark-accumulation-p" class="section-name selfRef">The Landmark Accumulation Problem</a>
+          </h4>
+<p id="section-3.7.1-1">In a traditional X.509 deployment, a constrained verifier typically holds one or more
+trust anchor certificates and retrieves revocation data periodically.  Each CRL
+supersedes its predecessor and the verifier need not retain prior revocation data.
+Storage requirements are bounded and predictable.<a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-2">Under MTC, landmark-relative certificate validation requires the verifier to hold the
+landmark corresponding to the batch in which the subject certificate was issued.  A
+newer landmark does not supersede an older one for the purpose of validating
+certificates issued against an older batch.  A device that must validate certificates
+issued over a ten-year window must retain every landmark published during that period.
+The storage requirement grows linearly with the landmark publication frequency and the
+length of the validation window.<a href="#section-3.7.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-3">The storage requirement can be bounded as follows.  Let W be the validation window in
+days, F be the landmark publication frequency in days per landmark and S be the size
+of a single landmark in bytes.  The minimum storage required for landmark retention is:<a href="#section-3.7.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.1-4">
+<pre>
+  Storage = ceiling(W / F) * S
+</pre><a href="#section-3.7.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.7.1-5">As an example, a device validating certificates with a ten-year validity window against
+daily-published landmarks of 512 bytes each requires approximately 1.83 MB of dedicated
+landmark storage.  PKI operators <span class="bcp14">SHOULD</span> calculate this value when evaluating MTC
+deployment for constrained device populations and <span class="bcp14">SHOULD</span> select landmark publication
+frequency with reference to the storage capacity of the most constrained device in the
+target population.<a href="#section-3.7.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="landmark-rebasing">
+<section id="section-3.7.2">
+          <h4 id="name-landmark-rebasing">
+<a href="#section-3.7.2" class="section-number selfRef">3.7.2. </a><a href="#name-landmark-rebasing" class="section-name selfRef">Landmark Rebasing</a>
+          </h4>
+<p id="section-3.7.2-1">Where the calculated storage requirement exceeds the available capacity of constrained
+devices, a rebasing mechanism may reduce the number of landmarks a device must retain.
+A rebase operation produces a new landmark that cryptographically subsumes a range of
+prior landmarks, allowing the device to replace that range with a single object.<a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-2">For a rebase to be valid, the device must be able to verify that the rebased landmark
+correctly represents all certificates included in the prior landmarks it replaces.  A
+rebase accompanied only by a new tree head and a CA signature does not provide this
+assurance.  The rebased landmark <span class="bcp14">MUST</span> be accompanied by a proof demonstrating that the
+prior landmark trees are subtrees of the rebased tree.  The LandmarkSubtreeProof
+mechanism defined in Section 3.1.4 of this document provides a suitable proof structure
+for this purpose.<a href="#section-3.7.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-3">A device accepting a rebased landmark <span class="bcp14">MUST</span> verify the accompanying subtree consistency
+proof before discarding any landmark that the rebase replaces.  A device that accepts
+a rebased landmark without verification is vulnerable to a history replacement attack
+in which an adversary substitutes a fraudulent tree head, potentially causing the
+device to reject valid certificates or accept fraudulent ones.<a href="#section-3.7.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="re-anchoring-after-extended-offline-periods">
+<section id="section-3.7.3">
+          <h4 id="name-re-anchoring-after-extended">
+<a href="#section-3.7.3" class="section-number selfRef">3.7.3. </a><a href="#name-re-anchoring-after-extended" class="section-name selfRef">Re-anchoring After Extended Offline Periods</a>
+          </h4>
+<p id="section-3.7.3-1">A device that has been without network access for an extended period accumulates a
+deficit of landmarks issued during its offline interval.  Upon reconnecting, the
+device must obtain those landmarks before it can validate certificates issued during
+the offline period.<a href="#section-3.7.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.3-2">A device re-anchoring after an extended offline interval <span class="bcp14">SHOULD</span> use the
+LandmarkSubtreeProofSet mechanism defined in Section 3.1.4 to obtain a compact proof
+connecting its most recent trusted landmark to the current landmark, rather than
+retrieving each intermediate landmark individually.  This minimizes both the bandwidth
+required for re-anchoring and the number of signature verifications the device must
+perform.  For deployments using post-quantum signature algorithms, the reduction in
+signature verification operations is particularly significant given the higher
+per-verification cost of those algorithms.<a href="#section-3.7.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.3-3">A device re-anchoring after an offline interval is exposed to rollback attacks in which
+an adversary presents an outdated landmark as the current one.  Devices <span class="bcp14">SHOULD</span> implement
+a monotonicity check on landmark tree sizes, rejecting any proposed current landmark
+with a tree size smaller than that of the most recently validated trusted landmark.<a href="#section-3.7.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.3-4">The monotonicity check depends on the device retaining its most recently validated
+landmark state across power cycles and resets.  The LandmarkState structure defines
+the minimum persistent state a device must maintain to support this check.  The
+max_observed_tree_size field records the largest tree size the device has successfully
+validated.  The last_trusted_tree_head field records the hash of the corresponding
+landmark, enabling the device to detect inconsistency if a claimed current landmark
+has a tree size equal to max_observed_tree_size but a different tree head value.
+This state <span class="bcp14">MUST</span> be stored in integrity-protected persistent storage.  Devices without
+such storage cannot provide rollback resistance and <span class="bcp14">SHOULD</span> obtain landmarks exclusively
+through authenticated channels that provide freshness guarantees.<a href="#section-3.7.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.3-5">
+<pre>
+struct LandmarkState {
+    uint64 max_observed_tree_size;
+    uint64 last_update_timestamp;
+    HashValue last_trusted_tree_head;
+}
+</pre><a href="#section-3.7.3-5" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="guidance-for-pki-operators">
+<section id="section-3.7.4">
+          <h4 id="name-guidance-for-pki-operators">
+<a href="#section-3.7.4" class="section-number selfRef">3.7.4. </a><a href="#name-guidance-for-pki-operators" class="section-name selfRef">Guidance for PKI Operators</a>
+          </h4>
+<p id="section-3.7.4-1">PKI operators deploying MTC for constrained device populations <span class="bcp14">SHOULD</span> publish landmark
+storage requirements as part of deployment documentation.  This documentation <span class="bcp14">SHOULD</span>
+include the landmark publication frequency, the expected certificate validity period for
+the target population, the per-landmark storage size and the calculated storage bound
+using the formula in Section 3.4.2.<a href="#section-3.7.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.4-2">Operators <span class="bcp14">SHOULD</span> also document the procedure for landmark rebasing if that capability
+is provided, including the expected rebase frequency and the verification procedure
+devices are expected to follow.<a href="#section-3.7.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.4-3">Where a single PKI serves both constrained and non-constrained device populations,
+operators <span class="bcp14">SHOULD</span> consider whether separate landmark publication schedules are warranted,
+with a lower-frequency schedule for constrained populations.  The LDP infrastructure
+defined in Section 3.1 may continue to serve non-constrained populations, while
+constrained populations receive pre-provisioned landmark packages through an out-of-band
+distribution mechanism suited to their connectivity characteristics.<a href="#section-3.7.4-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.4-4">A LandmarkPackage is the container format for a pre-provisioned set of landmarks
+distributed to constrained devices through out-of-band channels.  The package carries
+a contiguous range of landmarks from source_tree_size to target_tree_size, together
+with a LandmarkSubtreeProof demonstrating that the source landmark is a cryptographic
+prefix of the target landmark.  The package_signature field is produced by the CA
+over the remaining fields of the structure.  A device receiving a LandmarkPackage
+<span class="bcp14">MUST</span> verify the package_signature before accepting any landmark contained in the
+package, and <span class="bcp14">MUST</span> verify the consistency_proof before updating its LandmarkState.
+The source_tree_size in the package <span class="bcp14">MUST</span> be greater than or equal to the
+max_observed_tree_size recorded in the device's current LandmarkState.<a href="#section-3.7.4-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7.4-5">
+<pre>
+struct LandmarkPackage {
+    uint64 package_version;
+    uint64 creation_timestamp;
+    uint64 source_tree_size;
+    uint64 target_tree_size;
+    Landmark landmarks&lt;0..2^16-1&gt;;
+    LandmarkSubtreeProof consistency_proof;
+    MTCSignature package_signature;
+}
+</pre><a href="#section-3.7.4-5" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-4">
+      <h2 id="name-security-considerations">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-4-1">TODO Security<a href="#section-4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-5">
+      <h2 id="name-iana-considerations">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-5-1">This document requests a new id-pe-ldpBaseURIs extension for use with X.509 certificates
+in the "SMI Security for PKIX Certificate Extension" registry (1.3.6.1.5.5.7.1).<a href="#section-5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-normative-references">
+<section id="section-6">
+      <h2 id="name-normative-references">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      </h2>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+      <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+    <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">Thanks to David Benjamin, Bas Westerbaan, Mike Ounsworth, Tirumaleswar Reddy, Rich Salz and Kris Kwiatkowski for their feedback and review of this specification.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">John Gray</span></div>
+<div dir="auto" class="left"><span class="org">Entrust Limited</span></div>
+<div dir="auto" class="left"><span class="street-address">2500 Solandt Road – Suite 100</span></div>
+<div dir="auto" class="left">
+<span class="locality">Ottawa, Ontario</span>  <span class="postal-code">K2K 3G5</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Canada</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:john.gray@entrust.com" class="email">john.gray@entrust.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Jan Klaussner</span></div>
+<div dir="auto" class="left"><span class="org">Bundesdruckerei GmbH</span></div>
+<div dir="auto" class="left"><span class="street-address">Kommandantenstr. 18</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">10969</span> <span class="locality">Berlin</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jan.klaussner@bdr.de" class="email">jan.klaussner@bdr.de</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Luke Tindell</span></div>
+<div dir="auto" class="left"><span class="org">UK National Cyber Security Centre</span></div>
+<div dir="auto" class="left"><span class="country-name">United Kingdom</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:luke.t2@ncsc.gov.uk" class="email">luke.t2@ncsc.gov.uk</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Ganesh Mallaya</span></div>
+<div dir="auto" class="left"><span class="org">AppViewX Inc</span></div>
+<div dir="auto" class="left"><span class="street-address">107 Spring Street</span></div>
+<div dir="auto" class="left">
+<span class="locality">Seattle, Washington</span>,  </div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:ganesh.mallaya@appviewx.com" class="email">ganesh.mallaya@appviewx.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
