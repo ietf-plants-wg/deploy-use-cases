@@ -5,16 +5,16 @@
 PKI, Logs, And Tree Signatures                                   J. Gray
 Internet-Draft                                                   Entrust
 Intended status: Informational                              J. Klaussner
-Expires: 27 March 2027                              Bundesdruckerei GmbH
+Expires: 26 April 2027                              Bundesdruckerei GmbH
                                                               L. Tindell
                                        UK National Cyber Security Centre
                                                               G. Mallaya
                                                             AppViewX Inc
-                                                       23 September 2026
+                                                         23 October 2026
 
 
              Merkle Tree Certificates Deployment Use Cases
-             draft-gray-plants-mtc-deploy-use-cases-latest
+             draft-ietf-plants-mtc-deploy-use-cases-latest
 
 Abstract
 
@@ -28,11 +28,11 @@ About This Document
 
    This note is to be removed before publishing as an RFC.
 
-   The latest revision of this draft can be found at https://johngray-
-   dev.github.io/draft-gray-plants-mtc-deploy-use-cases/draft-gray-
-   plants-mtc-deploy-use-cases.html.  Status information for this
-   document may be found at https://datatracker.ietf.org/doc/draft-gray-
-   plants-mtc-deploy-use-cases/.
+   The latest revision of this draft can be found at https://github.com/
+   ietf-plants-wg/deploy-use-cases/draft-ietf-plants-mtc-deploy-use-
+   cases.html.  Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-ietf-plants-mtc-deploy-use-
+   cases/.
 
    Discussion of this document takes place on the PKI, Logs, And Tree
    Signatures Working Group mailing list (mailto:plants@ietf.org), which
@@ -40,8 +40,7 @@ About This Document
    Subscribe at https://www.ietf.org/mailman/listinfo/plants/.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/johngray-dev/draft-gray-plants-mtc-deploy-use-
-   cases.
+   https://github.com/ietf-plants-wg/deploy-use-cases.
 
 Status of This Memo
 
@@ -58,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 March 2027.
+   This Internet-Draft will expire on 26 April 2027.
 
 Copyright Notice
 
