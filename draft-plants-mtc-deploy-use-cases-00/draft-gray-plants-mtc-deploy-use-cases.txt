@@ -5,12 +5,12 @@
 PKI, Logs, And Tree Signatures                                   J. Gray
 Internet-Draft                                                   Entrust
 Intended status: Informational                              J. Klaussner
-Expires: 6 March 2027                               Bundesdruckerei GmbH
+Expires: 26 April 2027                              Bundesdruckerei GmbH
                                                               L. Tindell
                                        UK National Cyber Security Centre
                                                               G. Mallaya
                                                             AppViewX Inc
-                                                        2 September 2026
+                                                         23 October 2026
 
 
              Merkle Tree Certificates Deployment Use Cases
@@ -58,7 +58,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 March 2027.
+   This Internet-Draft will expire on 26 April 2027.
 
 Copyright Notice
 
