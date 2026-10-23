@@ -2,7 +2,7 @@
 
 # MTC Deployment Use Cases
 
-* [Editor's Copy](https://https://github.com/ietf-plants-wg/deploy-use-cases/draft-ietf-plants-mtc-deploy-use-cases/#go.draft-ietf-plants-mtc-deploy-use-cases.html)
+* [Editor's Copy](https://github.com/ietf-plants-wg/deploy-use-cases/draft-ietf-plants-mtc-deploy-use-cases/#go.draft-ietf-plants-mtc-deploy-use-cases.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-gray-plants-mtc-deploy-use-cases)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-gray-plants-mtc-deploy-use-cases)
 * [Compare Editor's Copy to Individual Draft](https://github.com/ietf-plants-wg/deploy-use-cases/draft-ietf-plants-mtc-deploy-use-cases/#go.draft-ietf-plants-mtc-deploy-use-cases.diff)
