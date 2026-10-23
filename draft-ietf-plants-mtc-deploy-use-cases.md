@@ -3,7 +3,7 @@ title: "Merkle Tree Certificates Deployment Use Cases"
 abbrev: "MTC Use Cases"
 category: info
 
-docname: draft-plants-mtc-deploy-use-cases-latest
+docname: draft-ietf-plants-mtc-deploy-use-cases-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -21,7 +21,7 @@ venue:
   mail: "plants@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/plants"
   github: "ietf-plants-wg/deploy-use-cases"
-  latest: "https://github.com/ietf-plants-wg/deploy-use-cases/draft-gray-plants-mtc-deploy-use-cases.html"
+  latest: "https://github.com/ietf-plants-wg/deploy-use-cases/draft-ietf-plants-mtc-deploy-use-cases.html"
 
 author:
  -
