@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-25T02:01:54.719684+00:00",
+  "timestamp": "2026-10-27T02:40:50.810202+00:00",
   "repo": "ietf-plants-wg/deploy-use-cases",
   "labels": [
     {
@@ -79,6 +79,22 @@
       "body": "Following the PLANTS meeting, we probably should have something in our document, or one of the documents that stresses that you should consider if MTCs are really the solution for your PKI. Or maybe we just need to clarify what we already have! ",
       "createdAt": "2026-07-20T13:37:06Z",
       "updatedAt": "2026-07-20T13:37:06Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOR-NuIc8AAAABZ10sTQ",
+      "title": "Clarify signed-artifact verification horizons beyond batch tree-head retention",
+      "url": "https://github.com/ietf-plants-wg/deploy-use-cases/issues/16",
+      "state": "OPEN",
+      "author": "VeriCommons",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In [draft-ietf-plants-mtc-deploy-use-cases-00, Section 3.5.5](https://www.ietf.org/archive/id/draft-ietf-plants-mtc-deploy-use-cases-00.txt),\nsigned artifacts may require verification throughout their operational\nlifetime, while the minimum batch-tree-head retention duration is based on\nthe maximum certificate validity period in the corresponding batch.\n\nCould the section also connect an application's intended verification horizon\nto its required verification inputs and the parties responsible for retaining\nthem? The existing requirement for continued access after CA decommissioning\nwould remain unchanged.\n\nConsider an application evaluating in 2045 a signature made in 2028. All\npublished batch tree heads remain accessible, but the application policy\nrequires an authenticated OCSP response retained to support the certificate-status\ndetermination at the relevant historical time. If that response is lost and\nno equivalent evidence is available from a source accepted by the policy,\nretaining the batch tree heads cannot recover the missing status evidence.\n\nThis issue concerns application validation inputs beyond the MTC certification\nproof. With the relying party's configured, trusted cosigner parameters and\ncosigner policy available, a standalone MTC can authenticate its subtree\nwithout fetching an external tree head. That does not supply every historical\nvalidation input required by the application. Historical validation is also\ndistinct from accepting an expired certificate for a current operation.\nSee [MTC-07, Sections 6.3 and 7.1\u20137.2](https://www.ietf.org/archive/id/draft-ietf-plants-merkle-tree-certs-07.html#section-6.3).\n\nSuggested text after the existing Section 3.5.5 paragraph:\n\n> Where an application's intended verification horizon extends beyond this\n> minimum period, its archival policy should identify the required verification\n> inputs, their retention periods, and the parties responsible for preserving\n> and making them available. These inputs depend on the certificate\n> representation and application validation policy; retained batch tree heads\n> alone need not be sufficient. The policy should provide for continuity of\n> those responsibilities when an issuer or archive service is retired. This\n> guidance does not extend certificate validity or change certificate validation\n> requirements.\n\nThe clarification does not allocate MTC syntax or an archival container, and\ndoes not prescribe one historical-validation policy. Existing evidence-record\nformats and application profiles retain their roles. Its applicability to\nlong-lived document signatures is motivation, not a request to add a document\nformat to this deployment draft.",
+      "createdAt": "2026-10-25T20:46:25Z",
+      "updatedAt": "2026-10-25T20:46:25Z",
       "closedAt": null,
       "comments": []
     }
