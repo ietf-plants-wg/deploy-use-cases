@@ -69,10 +69,10 @@ informative:
 
 --- abstract
 
-Merkle Tree Certificates (MTC)
+Merkle Tree Certificates (MTCs)
 I-D.ietf-plants-merkle-tree-certs has been defined for the
 use case of the WebPKI.
-In this document we explore when and how MTC in parts or full can be used in different
+In this document we explore when and how MTCs in parts or full can be used in different
 use cases. Some of this use-cases may provide benefit for private PKI usage.
 
 
@@ -82,16 +82,16 @@ use cases. Some of this use-cases may provide benefit for private PKI usage.
 
 EdNote: Before getting into the nitty gritty, let's start with the potential benefit
 
-Merkle Tree Certificates (MTC) have been designed to solve two problems for the WebPKI:
+Merkle Tree Certificates (MTCs) have been designed to solve two problems for the WebPKI:
 
 1. **Size.** A *landmark-relative Merkle Tree Certificate* is small as it
   only contains a public key and a small Merkle Tree inclusion proof.
-2. **Downgrade Detection.** MTC ensures Certificate Transparency is post-quantum secure, and with that
+2. **Downgrade Detection.** MTCs ensures Certificate Transparency is post-quantum secure, and with that
    allows detection of post-quantum downgrade attacks.
 
-Besides solving these two problems, MTC has additional benefits.
+Besides solving these two problems, MTCs has additional benefits.
 
-**Batch Signing.** MTC reduces the load on the CA because a single signature is used for a batch of certificates.
+**Batch Signing.** MTCs reduces the load on the CA because a single signature is used for a batch of certificates.
 
 A PKI that operates with any of these three challenges could benefit from MTC.
 These advantages come with trade-offs:
@@ -107,7 +107,7 @@ These advantages come with trade-offs:
 3. Batch sizing parameters will need to be carefully chosen to optimize
    system efficiency based on the particular use-case.
 
-## Brief overview of MTC
+## Brief overview of MTCs
 
 A Merkle Tree Certificate is a regular X509 certificate with two
 differences:
@@ -207,7 +207,7 @@ struct {
    the corresponding parameters of the chosen subtree.  To request the
    required landmark, the client simply combines the URL as follows:
 
-   LandmarkDistributionPoint?st=start?ed=end
+   LandmarkDistributionPoint?st=start&ed=end
 
    This allows the verifier to request the required landmark so the
    inclusion proof can be verified.
@@ -405,7 +405,7 @@ TODO:  Generating the consistency proof at the LDP server introduces an O(N^2) p
 - Current format uses start and end values from the inclusion proof.  This is nice because no other extension is needed in the EE certs
 - Landmarks should be available in a predictable way.  The above format should meet this requirement.
 - Do Landmark's contain a signature, or is it just the MTH and we use the cumulative landmarks along with the inclusion proof?
-   - A:  No, there is one trusted target that contains a signature.  That trusted target should be cached so that the full PQ signatures doesn't need to be continually downloaded.  This is where MTC gets its efficiency.
+   - A:  No, there is one trusted target that contains a signature.  That trusted target should be cached so that the full PQ signatures doesn't need to be continually downloaded.  This is where MTCs gets its efficiency.
 - Is there a repository of test landmark certificates that we can use to test this mechanism?
    - A:  Seems like a good hackathon project!
 
@@ -834,7 +834,7 @@ during the transition period.
 
 ### Migration Staging
 
-A private PKI operator deploying MTC during the post-quantum transition period should
+A private PKI operator deploying MTCs during the post-quantum transition period should
 proceed through distinct stages.  In the first stage, MTC infrastructure is deployed
 with classical batch signing.  The transparency log is operational and all certificate
 issuances are recorded, establishing the baseline against which migration progress is
@@ -959,7 +959,7 @@ struct LandmarkState {
 
 ### Guidance for PKI Operators
 
-PKI operators deploying MTC for constrained device populations SHOULD publish landmark
+PKI operators deploying MTCs for constrained device populations SHOULD publish landmark
 storage requirements as part of deployment documentation.  This documentation SHOULD
 include the landmark publication frequency, the expected certificate validity period for
 the target population, the per-landmark storage size and the calculated storage bound
