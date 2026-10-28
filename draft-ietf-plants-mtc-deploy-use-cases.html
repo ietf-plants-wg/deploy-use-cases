@@ -10,10 +10,10 @@
 <meta content="Luke Tindell" name="author">
 <meta content="Ganesh Mallaya" name="author">
 <meta content="
-       Merkle Tree Certificates (MTC)
+       Merkle Tree Certificates (MTCs)
 I-D.ietf-plants-merkle-tree-certs has been defined for the
 use case of the WebPKI.
-In this document we explore when and how MTC in parts or full can be used in different
+In this document we explore when and how MTCs in parts or full can be used in different
 use cases. Some of this use-cases may provide benefit for private PKI usage. 
     " name="description">
 <meta content="xml2rfc 3.34.1" name="generator">
@@ -1054,7 +1054,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Gray, et al.</td>
-<td class="center">Expires 26 April 2027</td>
+<td class="center">Expires 1 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg {
 <dd class="internet-draft">draft-ietf-plants-mtc-deploy-use-cases-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-23" class="published">23 October 2026</time>
+<time datetime="2026-10-28" class="published">28 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-26">26 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1097,10 +1097,10 @@ svg {
 <h1 id="title">Merkle Tree Certificates Deployment Use Cases</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Merkle Tree Certificates (MTC)
+<p id="section-abstract-1">Merkle Tree Certificates (MTCs)
 I-D.ietf-plants-merkle-tree-certs has been defined for the
 use case of the WebPKI.
-In this document we explore when and how MTC in parts or full can be used in different
+In this document we explore when and how MTCs in parts or full can be used in different
 use cases. Some of this use-cases may provide benefit for private PKI usage.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
@@ -1138,7 +1138,7 @@ use cases. Some of this use-cases may provide benefit for private PKI usage.<a h
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1171,7 +1171,7 @@ use cases. Some of this use-cases may provide benefit for private PKI usage.<a h
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
-                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-brief-overview-of-mtc" class="internal xref">Brief overview of MTC</a></p>
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-brief-overview-of-mtcs" class="internal xref">Brief overview of MTCs</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
                 <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-batch-size-trade-offs" class="internal xref">Batch size trade-offs</a></p>
@@ -1309,19 +1309,19 @@ use cases. Some of this use-cases may provide benefit for private PKI usage.<a h
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">EdNote: Before getting into the nitty gritty, let's start with the potential benefit<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Merkle Tree Certificates (MTC) have been designed to solve two problems for the WebPKI:<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-2">Merkle Tree Certificates (MTCs) have been designed to solve two problems for the WebPKI:<a href="#section-1-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-1-3">
 <li id="section-1-3.1">
           <p id="section-1-3.1.1"><strong>Size.</strong> A <em>landmark-relative Merkle Tree Certificate</em> is small as it
   only contains a public key and a small Merkle Tree inclusion proof.<a href="#section-1-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-1-3.2">
-          <p id="section-1-3.2.1"><strong>Downgrade Detection.</strong> MTC ensures Certificate Transparency is post-quantum secure, and with that
+          <p id="section-1-3.2.1"><strong>Downgrade Detection.</strong> MTCs ensures Certificate Transparency is post-quantum secure, and with that
 allows detection of post-quantum downgrade attacks.<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-1-4">Besides solving these two problems, MTC has additional benefits.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5"><strong>Batch Signing.</strong> MTC reduces the load on the CA because a single signature is used for a batch of certificates.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-4">Besides solving these two problems, MTCs has additional benefits.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5"><strong>Batch Signing.</strong> MTCs reduces the load on the CA because a single signature is used for a batch of certificates.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">A PKI that operates with any of these three challenges could benefit from MTC.
 These advantages come with trade-offs:<a href="#section-1-6" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-1-7">
@@ -1342,10 +1342,10 @@ certificates.<a href="#section-1-7.2.1" class="pilcrow">¶</a></p>
 system efficiency based on the particular use-case.<a href="#section-1-7.3.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<div id="brief-overview-of-mtc">
+<div id="brief-overview-of-mtcs">
 <section id="section-1.1">
-        <h3 id="name-brief-overview-of-mtc">
-<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-brief-overview-of-mtc" class="section-name selfRef">Brief overview of MTC</a>
+        <h3 id="name-brief-overview-of-mtcs">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-brief-overview-of-mtcs" class="section-name selfRef">Brief overview of MTCs</a>
         </h3>
 <p id="section-1.1-1">A Merkle Tree Certificate is a regular X509 certificate with two
 differences:<a href="#section-1.1-1" class="pilcrow">¶</a></p>
@@ -1469,7 +1469,7 @@ struct {
 <p id="section-3.1.1-5">Note that it contains start and end values which indicate
    the corresponding parameters of the chosen subtree.  To request the
    required landmark, the client simply combines the URL as follows:<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-6">LandmarkDistributionPoint?st=start?ed=end<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6">LandmarkDistributionPoint?st=start&amp;ed=end<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-7">This allows the verifier to request the required landmark so the
    inclusion proof can be verified.<a href="#section-3.1.1-7" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-8">The verifier needs to trust the issuer as per RFC 5280.<a href="#section-3.1.1-8" class="pilcrow">¶</a></p>
@@ -1704,7 +1704,7 @@ including post-quantum signature algorithms.<a href="#section-3.1.5-6" class="pi
               <p id="section-3.1.7-1.4.1">Do Landmark's contain a signature, or is it just the MTH and we use the cumulative landmarks along with the inclusion proof?<a href="#section-3.1.7-1.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.7-1.4.2.1">
-                  <p id="section-3.1.7-1.4.2.1.1">A:  No, there is one trusted target that contains a signature.  That trusted target should be cached so that the full PQ signatures doesn't need to be continually downloaded.  This is where MTC gets its efficiency.<a href="#section-3.1.7-1.4.2.1.1" class="pilcrow">¶</a></p>
+                  <p id="section-3.1.7-1.4.2.1.1">A:  No, there is one trusted target that contains a signature.  That trusted target should be cached so that the full PQ signatures doesn't need to be continually downloaded.  This is where MTCs gets its efficiency.<a href="#section-3.1.7-1.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
@@ -2185,7 +2185,7 @@ during the transition period.<a href="#section-3.6.5-4" class="pilcrow">¶</a></
           <h4 id="name-migration-staging">
 <a href="#section-3.6.6" class="section-number selfRef">3.6.6. </a><a href="#name-migration-staging" class="section-name selfRef">Migration Staging</a>
           </h4>
-<p id="section-3.6.6-1">A private PKI operator deploying MTC during the post-quantum transition period should
+<p id="section-3.6.6-1">A private PKI operator deploying MTCs during the post-quantum transition period should
 proceed through distinct stages.  In the first stage, MTC infrastructure is deployed
 with classical batch signing.  The transparency log is operational and all certificate
 issuances are recorded, establishing the baseline against which migration progress is
@@ -2321,7 +2321,7 @@ struct LandmarkState {
           <h4 id="name-guidance-for-pki-operators">
 <a href="#section-3.7.4" class="section-number selfRef">3.7.4. </a><a href="#name-guidance-for-pki-operators" class="section-name selfRef">Guidance for PKI Operators</a>
           </h4>
-<p id="section-3.7.4-1">PKI operators deploying MTC for constrained device populations <span class="bcp14">SHOULD</span> publish landmark
+<p id="section-3.7.4-1">PKI operators deploying MTCs for constrained device populations <span class="bcp14">SHOULD</span> publish landmark
 storage requirements as part of deployment documentation.  This documentation <span class="bcp14">SHOULD</span>
 include the landmark publication frequency, the expected certificate validity period for
 the target population, the per-landmark storage size and the calculated storage bound

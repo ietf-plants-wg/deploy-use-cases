@@ -5,12 +5,12 @@
 PKI, Logs, And Tree Signatures                                   J. Gray
 Internet-Draft                                                   Entrust
 Intended status: Informational                              J. Klaussner
-Expires: 26 April 2027                              Bundesdruckerei GmbH
+Expires: 1 May 2027                                 Bundesdruckerei GmbH
                                                               L. Tindell
                                        UK National Cyber Security Centre
                                                               G. Mallaya
                                                             AppViewX Inc
-                                                         23 October 2026
+                                                         28 October 2026
 
 
              Merkle Tree Certificates Deployment Use Cases
@@ -18,9 +18,9 @@ Expires: 26 April 2027                              Bundesdruckerei GmbH
 
 Abstract
 
-   Merkle Tree Certificates (MTC) I-D.ietf-plants-merkle-tree-certs has
+   Merkle Tree Certificates (MTCs) I-D.ietf-plants-merkle-tree-certs has
    been defined for the use case of the WebPKI.  In this document we
-   explore when and how MTC in parts or full can be used in different
+   explore when and how MTCs in parts or full can be used in different
    use cases.  Some of this use-cases may provide benefit for private
    PKI usage.
 
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 April 2027.
+   This Internet-Draft will expire on 1 May 2027.
 
 Copyright Notice
 
@@ -76,7 +76,7 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-     1.1.  Brief overview of MTC
+     1.1.  Brief overview of MTCs
      1.2.  Batch size trade-offs
    2.  Conventions and Definitions
    3.  Use cases
@@ -123,20 +123,20 @@ Table of Contents
    EdNote: Before getting into the nitty gritty, let's start with the
    potential benefit
 
-   Merkle Tree Certificates (MTC) have been designed to solve two
+   Merkle Tree Certificates (MTCs) have been designed to solve two
    problems for the WebPKI:
 
    1.  *Size.* A _landmark-relative Merkle Tree Certificate_ is small as
        it only contains a public key and a small Merkle Tree inclusion
        proof.
 
-   2.  *Downgrade Detection.* MTC ensures Certificate Transparency is
+   2.  *Downgrade Detection.* MTCs ensures Certificate Transparency is
        post-quantum secure, and with that allows detection of post-
        quantum downgrade attacks.
 
-   Besides solving these two problems, MTC has additional benefits.
+   Besides solving these two problems, MTCs has additional benefits.
 
-   *Batch Signing.* MTC reduces the load on the CA because a single
+   *Batch Signing.* MTCs reduces the load on the CA because a single
    signature is used for a batch of certificates.
 
    A PKI that operates with any of these three challenges could benefit
@@ -156,7 +156,7 @@ Table of Contents
    3.  Batch sizing parameters will need to be carefully chosen to
        optimize system efficiency based on the particular use-case.
 
-1.1.  Brief overview of MTC
+1.1.  Brief overview of MTCs
 
    A Merkle Tree Certificate is a regular X509 certificate with two
    differences:
@@ -267,7 +267,7 @@ LandmarkDistributionPoint ::= IA5String
    corresponding parameters of the chosen subtree.  To request the
    required landmark, the client simply combines the URL as follows:
 
-   LandmarkDistributionPoint?st=start?ed=end
+   LandmarkDistributionPoint?st=start&ed=end
 
    This allows the verifier to request the required landmark so the
    inclusion proof can be verified.
@@ -482,7 +482,7 @@ LandmarkDistributionPoint ::= IA5String
       -  A: No, there is one trusted target that contains a signature.
          That trusted target should be cached so that the full PQ
          signatures doesn't need to be continually downloaded.  This is
-         where MTC gets its efficiency.
+         where MTCs gets its efficiency.
 
    *  Is there a repository of test landmark certificates that we can
       use to test this mechanism?
@@ -958,7 +958,7 @@ LandmarkDistributionPoint ::= IA5String
 
 3.6.6.  Migration Staging
 
-   A private PKI operator deploying MTC during the post-quantum
+   A private PKI operator deploying MTCs during the post-quantum
    transition period should proceed through distinct stages.  In the
    first stage, MTC infrastructure is deployed with classical batch
    signing.  The transparency log is operational and all certificate
@@ -1101,8 +1101,8 @@ LandmarkDistributionPoint ::= IA5String
 
 3.7.4.  Guidance for PKI Operators
 
-   PKI operators deploying MTC for constrained device populations SHOULD
-   publish landmark storage requirements as part of deployment
+   PKI operators deploying MTCs for constrained device populations
+   SHOULD publish landmark storage requirements as part of deployment
    documentation.  This documentation SHOULD include the landmark
    publication frequency, the expected certificate validity period for
    the target population, the per-landmark storage size and the
