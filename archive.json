@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-27T02:40:50.810202+00:00",
+  "timestamp": "2026-10-29T03:11:54.238702+00:00",
   "repo": "ietf-plants-wg/deploy-use-cases",
   "labels": [
     {
@@ -772,25 +772,33 @@
       "id": "PR_kwDOR-NuIc8AAAABEwaZ0g",
       "title": "Fix pluralization of 'MTC' to 'MTCs' to align with the standards draft",
       "url": "https://github.com/ietf-plants-wg/deploy-use-cases/pull/12",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aww-aww",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Corrected pluralization of 'Merkle Tree Certificates' throughout the document for consistency. In the MTCs draft, they are always referred to as MTCs unless the use is specifically a singular use.",
       "createdAt": "2026-09-23T13:28:14Z",
-      "updatedAt": "2026-09-23T18:53:05Z",
+      "updatedAt": "2026-10-28T18:11:28Z",
       "baseRepository": "ietf-plants-wg/deploy-use-cases",
       "baseRefName": "main",
       "baseRefOid": "b5e05f27ea6c24c9c446e6830db43224a63373b9",
       "headRepository": "aww-aww/draft-gray-plants-mtc-deploy-use-cases",
       "headRefName": "patch-1",
       "headRefOid": "d243aa94c843411352fc0be6e5873181f9567265",
-      "closedAt": null,
+      "closedAt": "2026-10-28T18:11:28Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I added the changes into a separate request because this was created before the draft was adopted.   So the contents of this pull request have been merged.",
+          "createdAt": "2026-10-28T18:11:28Z",
+          "updatedAt": "2026-10-28T18:11:28Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOR-NuIc8AAAABO6DmPA",
@@ -803,6 +811,19 @@
           "body": "Thanks for making the document more consistent",
           "createdAt": "2026-09-23T18:53:05Z",
           "updatedAt": "2026-09-23T18:53:05Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOR-NuIc8AAAABUvb-iA",
+          "commit": {
+            "abbreviatedOid": "d243aa9"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thanks for the comments.  I'll make sure this gets Merged in.",
+          "createdAt": "2026-10-28T17:24:27Z",
+          "updatedAt": "2026-10-28T17:24:27Z",
           "comments": []
         }
       ]
@@ -854,26 +875,48 @@
       "id": "PR_kwDOR-NuIc8AAAABIXB-bQ",
       "title": "landmarkdistributionpoint: Fix querystring format",
       "url": "https://github.com/ietf-plants-wg/deploy-use-cases/pull/14",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "davidvoit",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The second parameter needs to be a & and not a second question mark to be a valid querystring",
       "createdAt": "2026-10-14T09:45:46Z",
-      "updatedAt": "2026-10-14T09:45:46Z",
+      "updatedAt": "2026-10-28T18:11:11Z",
       "baseRepository": "ietf-plants-wg/deploy-use-cases",
       "baseRefName": "main",
       "baseRefOid": "470929297ca90e605a5ef6b8152111205ad6c842",
       "headRepository": "davidvoit/draft-gray-plants-mtc-deploy-use-cases",
       "headRefName": "patch-1",
       "headRefOid": "826ced846e1da6a687a333979022c7efe539d2dc",
-      "closedAt": null,
+      "closedAt": "2026-10-28T18:11:11Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I added the changes into a separate request because this was created before the draft was adopted.   So the contents of this pull request have been merged.",
+          "createdAt": "2026-10-28T18:11:11Z",
+          "updatedAt": "2026-10-28T18:11:11Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOR-NuIc8AAAABUvPlcg",
+          "commit": {
+            "abbreviatedOid": "826ced8"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thanks David.   I'll merge this into the draft.",
+          "createdAt": "2026-10-28T17:09:08Z",
+          "updatedAt": "2026-10-28T17:09:08Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 15,
