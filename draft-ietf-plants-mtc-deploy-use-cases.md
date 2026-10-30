@@ -128,24 +128,24 @@ the landmark-relative certificate that leaves out the signatures.
 
 ##To MTC or not to MTC
 
-Using Merkle Tree Certificates (MTCs) is a change to PKI infrastructure that 
+Using Merkle Tree Certificates (MTCs) is a change to PKI infrastructure that
 comes with potential benefits but will incur other overheads, it is worth
 considering both before a transition.
 
 MTCs are an alternative mechanism to certificate chains. They allow a relying
 party to validate that a certificate chains back to a trust anchor in its root
 store. MTCs do not replace a leaf certificate's public key or the need for the
-authenticating party to prove possession of the corresponding private key. 
+authenticating party to prove possession of the corresponding private key.
 While MTCs can reduce the certificate chain overhead, they cannot address PKIs
 where a public key and a signature are themselves too large.
 
 Reducing the authentication overhead is one of the main motivations for using
-MTCs. Therefore MTCs should be compared against alternative approaches that 
+MTCs. Therefore MTCs should be compared against alternative approaches that
 achieve similar savings such as pre-distributing intermediate certificates. If
 a relying party has a local copy of the intermediate certificate, then the
 authenticating party needs to only send the leaf certificate without the rest
 of the certificate chain. The size comparison is therefore between the
-authentication overhead to validate the leaf certificate in each scenario. 
+authentication overhead to validate the leaf certificate in each scenario.
 
 A leaf certificate requires a signature for validation, while a landmark-relative
 MTC requires an inclusion proof and a standalone MTC requires both an inclusion
@@ -156,20 +156,20 @@ a PKI can effectively distribute landmarks to the relying parties. If there are
 relying parties within a PKI who cannot update their landmarks then those relying
 parties need to handle standalone certificates for every connection. PKIs can
 consider the likely proportion of connections that will use each MTC certificate
-type based on how well they can pre-distribute the landmarks. 
+type based on how well they can pre-distribute the landmarks.
 
 For PKIs that do not require certificate transparency, it is not necessary to
 introduce it to use MTCs. PKIs can omit the additional cosignatures, and use a
 single signature over the landmark from the CA. Where a PKI does require
 certificate transparency, the transparency signature material should be included
 in the size comparisons for leaf certificates, standalones and landmark-relative
-MTCs as they improve the relative size savings of landmark-relative MTCs drastically. 
+MTCs as they improve the relative size savings of landmark-relative MTCs drastically.
 
 Another motivation to use MTCs is to reduce the load on a CA as a single signature
 can be used for a batch of certificates, amortizing the cost over the number of
 certificates at the leaf nodes. The size of these batches comes with trade-offs
 against the size of the certificates. See batch size trade-offs discussion below
-for more details. 
+for more details.
 
 One potential downfall for MTCs is the availability concerns of a system that
 distributes the signed landmarks to relying parties; this needs to be highly
@@ -177,7 +177,7 @@ available to the relying parties within a PKI as an extended period of downtime
 could become a single point of failure within the PKI. Pre-distribution of
 intermediate certificates only needs to be done faster than the rate of
 intermediate certificate lifetimes, while pre-distribution of landmarks needs
-to be done faster than the rate of leaf certificate lifetimes. 
+to be done faster than the rate of leaf certificate lifetimes.
 
 ## Batch size trade-offs
 
