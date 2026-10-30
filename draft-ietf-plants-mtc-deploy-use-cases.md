@@ -73,14 +73,12 @@ Merkle Tree Certificates (MTCs)
 I-D.ietf-plants-merkle-tree-certs has been defined for the
 use case of the WebPKI.
 In this document we explore when and how MTCs in parts or full can be used in different
-use cases. Some of this use-cases may provide benefit for private PKI usage.
+use cases. Some of these use-cases may provide benefit for private PKI usage.
 
 
 --- middle
 
 # Introduction
-
-EdNote: Before getting into the nitty gritty, let's start with the potential benefit
 
 Merkle Tree Certificates (MTCs) have been designed to solve two problems for the WebPKI:
 
@@ -179,7 +177,7 @@ of its landmarks.  There are different ways this can be accomplished:
 
 The Landmark Distribution Point (LDP) mechanism for retrieving consistency
 proofs and validating landmark-relative certificates is specified in
-{{I-D.ietf-plants-mtc-ldp}}.
+I-D.draft-gray-plants-mtc-ldp
 
 ## Batching for performance optimization
 
