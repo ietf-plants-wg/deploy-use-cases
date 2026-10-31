@@ -1054,7 +1054,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Gray, et al.</td>
-<td class="center">Expires 1 May 2027</td>
+<td class="center">Expires 4 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg {
 <dd class="internet-draft">draft-ietf-plants-mtc-deploy-use-cases-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-28" class="published">28 October 2026</time>
+<time datetime="2026-10-31" class="published">31 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-04">4 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1138,7 +1138,7 @@ use cases. Some of this use-cases may provide benefit for private PKI usage.<a h
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1168,13 +1168,16 @@ use cases. Some of this use-cases may provide benefit for private PKI usage.<a h
         </h2>
 <nav class="toc"><ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
-            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+            <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-brief-overview-of-mtcs" class="internal xref">Brief overview of MTCs</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
-                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-batch-size-trade-offs" class="internal xref">Batch size trade-offs</a></p>
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-to-mtc-or-not-to-mtc" class="internal xref">To MTC or not to MTC</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-batch-size-trade-offs" class="internal xref">Batch size trade-offs</a></p>
 </li>
             </ul>
 </li>
@@ -1368,26 +1371,77 @@ that case is called a <em>landmark</em>), then it can be satisfied with
 the landmark-relative certificate that leaves out the signatures.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="batch-size-trade-offs">
+<div id="to-mtc-or-not-to-mtc">
 <section id="section-1.2">
-        <h3 id="name-batch-size-trade-offs">
-<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-batch-size-trade-offs" class="section-name selfRef">Batch size trade-offs</a>
+        <h3 id="name-to-mtc-or-not-to-mtc">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-to-mtc-or-not-to-mtc" class="section-name selfRef">To MTC or not to MTC</a>
         </h3>
-<p id="section-1.2-1">A PKI can make trade-offs when selecting MTC batch sizes for both
-checkpoints and landmarks.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
-<p id="section-1.2-2">For checkpoints the trade-off is between computational cost of signatures and
+<p id="section-1.2-1">Using Merkle Tree Certificates (MTCs) is a change to PKI infrastructure that
+comes with potential benefits but will incur other overheads, it is worth
+considering both before a transition.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">MTCs are an alternative mechanism to certificate chains. They allow a relying
+party to validate that a certificate chains back to a trust anchor in its root
+store. MTCs do not replace a leaf certificate's public key or the need for the
+authenticating party to prove possession of the corresponding private key.
+While MTCs can reduce the certificate chain overhead, they cannot address PKIs
+where a public key and a signature are themselves too large.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">Reducing the authentication overhead is one of the main motivations for using
+MTCs. Therefore MTCs should be compared against alternative approaches that
+achieve similar savings such as pre-distributing intermediate certificates. If
+a relying party has a local copy of the intermediate certificate, then the
+authenticating party needs to only send the leaf certificate without the rest
+of the certificate chain. The size comparison is therefore between the
+authentication overhead to validate the leaf certificate in each scenario.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-4">A leaf certificate requires a signature for validation, while a landmark-relative
+MTC requires an inclusion proof and a standalone MTC requires both an inclusion
+proof and a signature. The relying party has to have acquired an authenticated
+landmark to accept landmark-relative MTCs and so any gains due to the size
+difference between an inclusion proof and a signature can only be realised if
+a PKI can effectively distribute landmarks to the relying parties. If there are
+relying parties within a PKI who cannot update their landmarks then those relying
+parties need to handle standalone certificates for every connection. PKIs can
+consider the likely proportion of connections that will use each MTC certificate
+type based on how well they can pre-distribute the landmarks.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
+<p id="section-1.2-5">For PKIs that do not require certificate transparency, it is not necessary to
+introduce it to use MTCs. PKIs can omit the additional cosignatures, and use a
+single signature over the landmark from the CA. Where a PKI does require
+certificate transparency, the transparency signature material should be included
+in the size comparisons for leaf certificates, standalones and landmark-relative
+MTCs as they improve the relative size savings of landmark-relative MTCs drastically.<a href="#section-1.2-5" class="pilcrow">¶</a></p>
+<p id="section-1.2-6">Another motivation to use MTCs is to reduce the load on a CA as a single signature
+can be used for a batch of certificates, amortizing the cost over the number of
+certificates at the leaf nodes. The size of these batches comes with trade-offs
+against the size of the certificates. See batch size trade-offs discussion below
+for more details.<a href="#section-1.2-6" class="pilcrow">¶</a></p>
+<p id="section-1.2-7">One potential downfall for MTCs is the availability concerns of a system that
+distributes the signed landmarks to relying parties; this needs to be highly
+available to the relying parties within a PKI as an extended period of downtime
+could become a single point of failure within the PKI. Pre-distribution of
+intermediate certificates only needs to be done faster than the rate of
+intermediate certificate lifetimes, while pre-distribution of landmarks needs
+to be done faster than the rate of leaf certificate lifetimes.<a href="#section-1.2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="batch-size-trade-offs">
+<section id="section-1.3">
+        <h3 id="name-batch-size-trade-offs">
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-batch-size-trade-offs" class="section-name selfRef">Batch size trade-offs</a>
+        </h3>
+<p id="section-1.3-1">A PKI can make trade-offs when selecting MTC batch sizes for both
+checkpoints and landmarks.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3-2">For checkpoints the trade-off is between computational cost of signatures and
 the size of standalone certificates. Smaller checkpoint batches require more
 frequent signatures, but reduce the size of the inclusion proofs for standalone
 certificates. Conversely, larger batches reduce the signature frequency but
-increase the size of inclusion proofs for standalone certificates.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
-<p id="section-1.2-3">For landmarks the trade-offs are between relying party storage costs and the
+increase the size of inclusion proofs for standalone certificates.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
+<p id="section-1.3-3">For landmarks the trade-offs are between relying party storage costs and the
 size of landmark-relative certificates. Fewer landmarks require less storage on
 the relying party, but result in each landmark representing a larger Merkle
 tree, which increases the size of the inclusion proof for the landmark-relative
 certificate. Conversely, more frequent landmarks would give smaller proofs for
-the landmark-relative certificate but require more storage on the relying party.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
-<p id="section-1.2-4">Both batch sizes will be influenced by the specifics of the PKI, including the
-frequency of certificate signing requests and acceptable issuance latency.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
+the landmark-relative certificate but require more storage on the relying party.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
+<p id="section-1.3-4">Both batch sizes will be influenced by the specifics of the PKI, including the
+frequency of certificate signing requests and acceptable issuance latency.<a href="#section-1.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
