@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-29T03:11:54.238702+00:00",
+  "timestamp": "2026-11-01T02:54:23.060522+00:00",
   "repo": "ietf-plants-wg/deploy-use-cases",
   "labels": [
     {
@@ -71,15 +71,15 @@
       "id": "I_kwDOR-NuIc8AAAABJdIIFg",
       "title": "To MTC or not to MTC",
       "url": "https://github.com/ietf-plants-wg/deploy-use-cases/issues/10",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "Luke-T-2",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Following the PLANTS meeting, we probably should have something in our document, or one of the documents that stresses that you should consider if MTCs are really the solution for your PKI. Or maybe we just need to clarify what we already have! ",
       "createdAt": "2026-07-20T13:37:06Z",
-      "updatedAt": "2026-07-20T13:37:06Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-31T19:48:35Z",
+      "closedAt": "2026-10-31T19:48:35Z",
       "comments": []
     },
     {
@@ -943,6 +943,74 @@
       "mergeCommit": {
         "oid": "d7f959c6006b178beccd00d8f44b9595d4e2a953"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 17,
+      "id": "PR_kwDOR-NuIc8AAAABLyOakw",
+      "title": "To MTC or not to MTC ",
+      "url": "https://github.com/ietf-plants-wg/deploy-use-cases/pull/17",
+      "state": "MERGED",
+      "author": "Luke-T-2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I have had a go at writing an intial draft of some text for a to mtc or not to mtc section. \n\nI think it would be worthwhile to potentially amend after discussions with larger private PKIs where MTC use makes more sense so that the guidance is aligned. ",
+      "createdAt": "2026-10-30T14:17:44Z",
+      "updatedAt": "2026-10-31T19:48:33Z",
+      "baseRepository": "ietf-plants-wg/deploy-use-cases",
+      "baseRefName": "main",
+      "baseRefOid": "8ec7242551d7cff941b10d06a4109ad40804687d",
+      "headRepository": "ietf-plants-wg/deploy-use-cases",
+      "headRefName": "lt_mtc_or_not",
+      "headRefOid": "66e6b637bfb0349aef908fd6203bdf6a7b769029",
+      "closedAt": "2026-10-31T19:48:33Z",
+      "mergedAt": "2026-10-31T19:48:33Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "60feb704962e3b7972c997c4083424699c0fc498"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOR-NuIc8AAAABVNLJdA",
+          "commit": {
+            "abbreviatedOid": "66e6b63"
+          },
+          "author": "johngray-dev",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good Luke!  Thanks for adding.   I'll Merge this!\n",
+          "createdAt": "2026-10-30T20:08:01Z",
+          "updatedAt": "2026-10-30T20:08:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOR-NuIc8AAAABL2ltrw",
+      "title": "Jg remove the details of the LDP mechanism, add to own draft",
+      "url": "https://github.com/ietf-plants-wg/deploy-use-cases/pull/18",
+      "state": "OPEN",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Remove the details of the LDP mechanism, add it to its own draft",
+      "createdAt": "2026-10-30T20:09:17Z",
+      "updatedAt": "2026-10-30T20:09:17Z",
+      "baseRepository": "ietf-plants-wg/deploy-use-cases",
+      "baseRefName": "main",
+      "baseRefOid": "8ec7242551d7cff941b10d06a4109ad40804687d",
+      "headRepository": "ietf-plants-wg/deploy-use-cases",
+      "headRefName": "jg_removeWeeds",
+      "headRefOid": "9ebe571e55c804f07fca3ec80c727b462ade4f07",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
