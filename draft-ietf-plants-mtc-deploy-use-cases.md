@@ -61,10 +61,10 @@ author:
 
 
 normative:
-I-D.ietf-plants-merkle-tree-certs:
+   I-D.ietf-plants-merkle-tree-certs:
 
 informative:
-I-D.draft-gray-plants-mtc-ldp:
+   I-D.draft-gray-plants-mtc-ldp:
 
 ...
 
