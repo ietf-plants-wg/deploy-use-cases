@@ -1,9 +1,3 @@
-## Independent Monitor
-An independent monitor can compare logged issuance against authorization and migration policies, then alert on unexpected entities, algorithm downgrades, or other anomalous activity.  Separation between the monitor and CA administration provides an independent check.  Monitoring can focus on unauthorized issuance, algorithm downgrades, and other anomalous activity.
-### Archival Obligations
-Signed artifacts may need to be verified long after issuance, including after the issuing CA has been decommissioned.  Deployments therefore need an archival plan for log data and published tree heads that covers their operational lifetime.
-### Re-anchoring After Extended Offline Periods
-When connectivity returns, the device needs to catch up efficiently and avoid accepting stale landmark information.  The deployment must account for both recovery bandwidth and the device's ability to retain trusted state across restarts.
 ---
 title: "Merkle Tree Certificates Deployment Use Cases"
 abbrev: "MTC Use Cases"
