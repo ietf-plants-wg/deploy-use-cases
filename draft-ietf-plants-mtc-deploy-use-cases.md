@@ -1,3 +1,9 @@
+## Independent Monitor
+An independent monitor can compare logged issuance against authorization and migration policies, then alert on unexpected entities, algorithm downgrades, or other anomalous activity.  Separation between the monitor and CA administration provides an independent check.  Monitoring can focus on unauthorized issuance, algorithm downgrades, and other anomalous activity.
+### Archival Obligations
+Signed artifacts may need to be verified long after issuance, including after the issuing CA has been decommissioned.  Deployments therefore need an archival plan for log data and published tree heads that covers their operational lifetime.
+### Re-anchoring After Extended Offline Periods
+When connectivity returns, the device needs to catch up efficiently and avoid accepting stale landmark information.  The deployment must account for both recovery bandwidth and the device's ability to retain trusted state across restarts.
 ---
 title: "Merkle Tree Certificates Deployment Use Cases"
 abbrev: "MTC Use Cases"
@@ -64,6 +70,8 @@ normative:
 I-D.draft-ietf-plants-merkle-tree-certs-03:
 
 informative:
+# I-D.draft-ietf-plants-mtc-private-pki-monitoring:
+# I-D.draft-ietf-plants-mtc-constrained-devices:
 
 ...
 
@@ -312,124 +320,25 @@ be erased without detection by any party that has retained log state.
 
 ### Transparency Log Requirements for Code Signing
 
-For the transparency log to support anomaly detection and post-incident forensics in
-code signing deployments, the log MUST record the following information per batch: the
-signing algorithm used to produce the batch tree head signature, the timestamp of batch
-creation and the issuing CA identity.  Per certificate entry, the log MUST record the
-subject identity, the subject public key algorithm, key usage extension values and the
-certificate validity period.
-
-Per-certificate algorithm metadata is required for post-quantum migration auditing.  An
-organization asserting that its code signing infrastructure issued only post-quantum
-certificates from a given date must be able to demonstrate this from the log record,
-with cryptographic verifiability that an audit database alone cannot provide.
-
-The following structures define the information model for a code signing log entry.
-Two-level recording is used: one record per batch captures the batch-level signing
-metadata, and one record per certificate captures the subject-level metadata needed
-for monitor evaluation and forensic queries.
-
-~~~
-struct CertMetadata {
-    opaque subject_identity<0..2^16-1>;
-    PublicKeyAlgorithm subject_key_algorithm;
-    uint16 key_usage_flags;
-    uint64 not_before;
-    uint64 not_after;
-    uint64 leaf_index;
-}
-
-struct CodeSigningLogEntry {
-    uint64 batch_id;
-    uint64 timestamp;
-    SignatureAlgorithm batch_signing_algorithm;
-    HashValue batch_tree_head;
-    opaque issuing_ca_identity<0..2^16-1>;
-    CertMetadata cert_entries<0..2^32-1>;
-}
-~~~
-
-A signing receipt is the artifact-embedded object that binds a signed binary, container
-image or firmware update to a specific log entry.  The receipt travels inside the
-artifact's signature container alongside the standalone MTC.  A verifier extracts the
-receipt, verifies the batch_root_signature against the locally-held CA trust anchor,
-and then verifies the inclusion_proof to confirm that the signing certificate is a leaf
-in the identified batch.
-
-~~~
-struct SigningReceipt {
-    uint64 batch_id;
-    uint64 leaf_index;
-    HashValue inclusion_proof<0..2^16-1>;
-    MTCSignature batch_root_signature;
-    uint64 log_commit_timestamp;
-    opaque log_operator_id<0..2^16-1>;
-}
-~~~
-
-When a CA transitions its batch signing from one algorithm class to another, it MUST
-publish an AlgorithmTransitionEvent to the transparency log before the first batch
-signed under the new algorithm is distributed.  The ca_assertion_signature field is
-produced by the CA over the remaining fields of the structure, using the signing key
-corresponding to the new_batch_algorithm, providing cryptographic proof that the CA
-holding the new key has authorized the transition record.
-
-~~~
-struct AlgorithmTransitionEvent {
-    uint64 effective_batch_id;
-    uint64 timestamp;
-    SignatureAlgorithm previous_batch_algorithm;
-    SignatureAlgorithm new_batch_algorithm;
-    opaque ca_identity<0..2^16-1>;
-    MTCSignature ca_assertion_signature;
-}
-~~~
+Transparency logging can make signing activity independently verifiable and support
+incident investigation.  Deployments need to decide what issuance metadata to record,
+how artifacts refer to their log entries, and how algorithm transitions are recorded.
+Deployments may use an artifact-associated receipt to identify the relevant log entry.
 
 ### Independent Monitor
 
-The transparency log for private PKI code signing MUST be operated independently from
-the issuing CA.  A log under the administrative control of the CA operator does not
-provide an independent check against the threats described in this section.
-
-An independent monitor consuming the log SHOULD maintain an authoritative register of
-entities authorized to hold signing certificates and the algorithm classes they are
-authorized to use.  The monitor SHOULD alert on: issuance of a signing certificate to
-an entity absent from the authorization register; issuance of a classical algorithm
-signing certificate to an entity recorded as having completed migration to post-quantum
-algorithms; and any unexplained reduction in post-quantum algorithm usage across
-successive batches.
-
-The MonitorAlert structure defines the information model for an alert raised by the
-independent monitor.  The evidence_log_reference field carries a reference to the
-specific CodeSigningLogEntry or AlgorithmTransitionEvent that triggered the alert,
-allowing the recipient to independently verify the raw log data.
-
-~~~
-enum AlertType {
-    UNAUTHORIZED_ISSUANCE,
-    ALGORITHM_DOWNGRADE,
-    MIGRATION_REGRESSION,
-    FROZEN_DEVICE_ANOMALY
-}
-
-struct MonitorAlert {
-    AlertType alert_type;
-    opaque subject_identity<0..2^16-1>;
-    uint64 batch_id;
-    uint64 leaf_index;
-    uint64 detection_timestamp;
-    opaque evidence_log_reference<0..2^16-1>;
-}
-~~~
+An independent monitor can compare logged issuance against authorization and migration
+policies, then alert on unexpected entities, algorithm downgrades, or other anomalous
+activity.  Separation between the monitor and CA administration provides an independent
+check.  Monitoring can focus on unauthorized issuance, algorithm downgrades, and other
+anomalous activity.
 
 ### Archival Obligations
 
-Signed artifacts may require verification throughout their operational lifetime, which
-in enterprise deployments can span years.  A CA issuing signing certificates MUST retain
-accessible archives of all published batch tree heads for a period not less than the
-maximum validity period of any certificate in the corresponding batch.  These archives
-MUST remain accessible following the decommissioning of the issuing CA and MUST NOT
-share infrastructure with the live issuing CA.
+Signed artifacts may need to be verified long after issuance, including after the issuing
+CA has been decommissioned.  Deployments therefore need an archival plan for log data and
+published tree heads for an appropriate period, including after the issuing CA has been
+decommissioned.
 
 
 ## Private PKI PQC Migration with Downgrade Resistance
@@ -493,42 +402,10 @@ completed migration rather than assertions about future intent.
 
 ### Unauthorized Classical Certificate Issuance During Migration
 
-An entity that has completed migration to post-quantum algorithms should no longer
-receive classical algorithm certificates.  During the hybrid transition period,
-however, a CA operating both issuance paths may issue a classical certificate to such
-an entity through misconfiguration, policy error or deliberate action.  A classical
-certificate issued to an entity that accepts only post-quantum certificates can be
-used to intercept communications from any relying party that retains classical
-certificate trust.
-
-A transparency log with an independent monitor maintaining an authoritative migration
-status register enables detection of this event.  The monitor can identify any
-classical certificate issuance to an entity recorded as having completed migration
-and raise an alert before the certificate is deployed.
-
-The MigrationStatusEntry structure defines the information model for a single entry
-in the migration status register.  The status field records the current migration
-state of the subject.  The status_effective_date field records the date from which
-the recorded status applies, enabling the monitor to correctly classify certificate
-issuances that predate a status change.  The policy_reference field carries an
-opaque reference to the organizational policy or administrative record that authorized
-the recorded status, providing an audit trail for register entries.
-
-~~~
-enum MigrationStatus {
-    CLASSICAL_ONLY,
-    HYBRID,
-    PQ_ONLY,
-    FROZEN
-}
-
-struct MigrationStatusEntry {
-    opaque subject_identity<0..2^16-1>;
-    MigrationStatus status;
-    uint64 status_effective_date;
-    opaque policy_reference<0..2^16-1>;
-}
-~~~
+During a hybrid transition, an entity that has moved to post-quantum algorithms may still
+receive a classical certificate through policy error or unauthorized issuance.  A
+transparency log and independent monitor comparing issuance records with migration status
+can detect this mismatch and alert PKI operators.
 
 ### Frozen Devices
 
@@ -537,77 +414,23 @@ post-quantum algorithm support.  Regulatory re-approval requirements, sealed har
 and immovable service constraints mean that some endpoints will continue to use
 classical algorithm certificates for the duration of their service lives, regardless
 of the broader migration status of the PKI.
-
-These devices need not implement MTC.  The transparency log supports a monitoring
-pattern for frozen device populations in which the CA records classical certificate
-issuances for frozen device identifiers and an independent monitor watches those
-identifiers for anomalous activity.  The monitor can alert if a classical certificate
-is issued for a frozen device identifier by an unexpected CA or with unexpected
-attributes.  The monitoring operates independently of the device and provides detection
-capability without requiring any modification to device firmware or software.
-
-A FrozenDeviceRecord is a signed assertion by the PKI operator that a specific device
-identity is designated as a frozen endpoint.  The record identifies the single CA
-authorized to issue classical certificates for the device and the specific algorithm
-permitted for those certificates.  The monitor MUST reject any classical certificate
-issuance for a frozen device identity that does not match the authorized_issuer_ca_identity
-and permitted_key_algorithm fields of the corresponding FrozenDeviceRecord.  The
-operator_signature field is produced by the PKI operator over the remaining fields of
-the structure, using a key whose public counterpart is held in the monitor's trust
-configuration.
-
-~~~
-struct FrozenDeviceRecord {
-    opaque device_identity<0..2^16-1>;
-    opaque authorized_issuer_ca_identity<0..2^16-1>;
-    PublicKeyAlgorithm permitted_key_algorithm;
-    uint64 record_effective_date;
-    uint64 record_expiry_date;
-    MTCSignature operator_signature;
-}
-~~~
+These devices need not implement MTC.  A transparency log and independent monitor can
+identify unexpected issuance for this population without requiring changes to device
+firmware or software.  The monitor can compare issuance against the operator's approved
+device and issuer information.
 
 ### Algorithm Metadata Requirements
 
 For the transparency log to support the use cases described in this section, the log
-MUST record the signing algorithm used to produce each batch tree head signature and
-the subject public key algorithm for each certificate in each batch.  Per-certificate
-algorithm metadata is required because a CA operating during the hybrid transition
-period may issue both classical and post-quantum certificates within the same batch.
-
-A CA transitioning between algorithm classes in batch signing MUST record each
-transition as a distinct log event with a timestamp.  These records constitute the
-verifiable migration timeline that regulatory compliance requirements may demand.
-
-The AlgorithmTransitionEvent structure defined in Section 3.3 is reused here for
-recording batch signing algorithm transitions in the PQC migration context.  For
-migration auditing purposes, a monitor querying the log for AlgorithmTransitionEvent
-entries can reconstruct the complete algorithm transition history for any CA, with
-each transition cryptographically bound to the batch at which it took effect.
-
-In addition to batch-level transitions, the log entry for each certificate MUST
-carry the subject public key algorithm, as defined in the CertMetadata structure
-in Section 3.3.  The monitor evaluates per-certificate algorithm metadata against
-the MigrationStatusEntry for each subject to detect unauthorized classical issuance
-during the transition period.
+needs to capture the algorithms used for batch signatures and certificates.  Recording
+algorithm transitions also supports auditing of migration progress.
 
 ### Migration Staging
 
 A private PKI operator deploying MTCs during the post-quantum transition period should
-proceed through distinct stages.  In the first stage, MTC infrastructure is deployed
-with classical batch signing.  The transparency log is operational and all certificate
-issuances are recorded, establishing the baseline against which migration progress is
-measured.  In the second stage, batch tree head signing transitions to hybrid signatures
-incorporating both classical and post-quantum algorithms.  Certificate-level algorithm
-migration proceeds at a pace determined by endpoint readiness.  In the third stage,
-post-quantum-only batch signing is adopted and the transparency log records this
-transition with a timestamp that constitutes the verifiable PQC migration completion
-date for the batch signing infrastructure.  In the fourth stage, classical algorithm
-certificate issuance is discontinued except for designated frozen device populations,
-and the log provides ongoing monitoring capability for those populations.
-
-The duration of each stage depends on the specific PKI deployment, the endpoint
-population capabilities and applicable regulatory requirements.
+establish issuance visibility, move through hybrid operation toward post-quantum-only
+issuance, and account for devices that cannot migrate.  Appropriate stages and their
+duration depend on endpoint readiness and organizational requirements.
 
 
 ## Constrained Device Certificate Validation
@@ -620,10 +443,10 @@ certificates issued over an extended time window, potentially spanning years, wi
 the ability to maintain a continuously updated landmark cache or retrieve landmarks
 on demand.
 
-This use case is distinct from the landmark distribution use case in Section 3.1,
-which addresses endpoints with network connectivity capable of fetching landmarks as
-needed.  This section addresses endpoints for which neither real-time landmark
-retrieval nor continuous landmark cache maintenance can be assumed.
+Unlike online landmark distribution, this use case considers endpoints that cannot
+reliably retrieve or continuously refresh landmark information.  Deployments need to
+balance storage, connectivity, and the ability to recover safely after an extended
+offline period.
 
 ### The Landmark Accumulation Problem
 
@@ -632,49 +455,16 @@ trust anchor certificates and retrieves revocation data periodically.  Each CRL
 supersedes its predecessor and the verifier need not retain prior revocation data.
 Storage requirements are bounded and predictable.
 
-Under MTC, landmark-relative certificate validation requires the verifier to hold the
-landmark corresponding to the batch in which the subject certificate was issued.  A
-newer landmark does not supersede an older one for the purpose of validating
-certificates issued against an older batch.  A device that must validate certificates
-issued over a ten-year window must retain every landmark published during that period.
-The storage requirement grows linearly with the landmark publication frequency and the
-length of the validation window.
-
-The storage requirement can be bounded as follows.  Let W be the validation window in
-days, F be the landmark publication frequency in days per landmark and S be the size
-of a single landmark in bytes.  The minimum storage required for landmark retention is:
-
-~~~
-  Storage = ceiling(W / F) * S
-~~~
-
-As an example, a device validating certificates with a ten-year validity window against
-daily-published landmarks of 512 bytes each requires approximately 1.83 MB of dedicated
-landmark storage.  PKI operators SHOULD calculate this value when evaluating MTC
-deployment for constrained device populations and SHOULD select landmark publication
-frequency with reference to the storage capacity of the most constrained device in the
-target population.
+With MTC, a verifier may need to retain landmarks corresponding to certificates it
+validates.  Storage needs therefore depend on the validation window and landmark
+publication frequency.  PKI operators should consider the capacity of the most
+constrained device when selecting a publication schedule.
 
 ### Landmark Rebasing
 
-Where the calculated storage requirement exceeds the available capacity of constrained
-devices, a rebasing mechanism may reduce the number of landmarks a device must retain.
-A rebase operation produces a new landmark that cryptographically subsumes a range of
-prior landmarks, allowing the device to replace that range with a single object.
-
-For a rebase to be valid, the device must be able to verify that the rebased landmark
-correctly represents all certificates included in the prior landmarks it replaces.  A
-rebase accompanied only by a new tree head and a CA signature does not provide this
-assurance.  The rebased landmark MUST be accompanied by a proof demonstrating that the
-prior landmark trees are subtrees of the rebased tree.  The LandmarkSubtreeProof
-mechanism defined in Section 3.1.4 of this document provides a suitable proof structure
-for this purpose.
-
-A device accepting a rebased landmark MUST verify the accompanying subtree consistency
-proof before discarding any landmark that the rebase replaces.  A device that accepts
-a rebased landmark without verification is vulnerable to a history replacement attack
-in which an adversary substitutes a fraudulent tree head, potentially causing the
-device to reject valid certificates or accept fraudulent ones.
+Landmark rebasing may reduce the number of landmarks a constrained device must retain
+by replacing multiple older landmarks with a more compact representation.  Devices need
+a way to establish trust in the replacement before discarding the landmarks it covers.
 
 ### Re-anchoring After Extended Offline Periods
 
@@ -683,80 +473,22 @@ deficit of landmarks issued during its offline interval.  Upon reconnecting, the
 device must obtain those landmarks before it can validate certificates issued during
 the offline period.
 
-A device re-anchoring after an extended offline interval SHOULD use the
-LandmarkSubtreeProofSet mechanism defined in Section 3.1.4 to obtain a compact proof
-connecting its most recent trusted landmark to the current landmark, rather than
-retrieving each intermediate landmark individually.  This minimizes both the bandwidth
-required for re-anchoring and the number of signature verifications the device must
-perform.  For deployments using post-quantum signature algorithms, the reduction in
-signature verification operations is particularly significant given the higher
-per-verification cost of those algorithms.
-
-A device re-anchoring after an offline interval is exposed to rollback attacks in which
-an adversary presents an outdated landmark as the current one.  Devices SHOULD implement
-a monotonicity check on landmark tree sizes, rejecting any proposed current landmark
-with a tree size smaller than that of the most recently validated trusted landmark.
-
-The monotonicity check depends on the device retaining its most recently validated
-landmark state across power cycles and resets.  The LandmarkState structure defines
-the minimum persistent state a device must maintain to support this check.  The
-max_observed_tree_size field records the largest tree size the device has successfully
-validated.  The last_trusted_tree_head field records the hash of the corresponding
-landmark, enabling the device to detect inconsistency if a claimed current landmark
-has a tree size equal to max_observed_tree_size but a different tree head value.
-This state MUST be stored in integrity-protected persistent storage.  Devices without
-such storage cannot provide rollback resistance and SHOULD obtain landmarks exclusively
-through authenticated channels that provide freshness guarantees.
-
-~~~
-struct LandmarkState {
-    uint64 max_observed_tree_size;
-    uint64 last_update_timestamp;
-    HashValue last_trusted_tree_head;
-}
-~~~
+When connectivity returns, the device needs to catch up efficiently and avoid accepting
+stale landmark information.  The deployment must account for both recovery bandwidth
+and the device's ability to retain trusted state across restarts.  Devices also need to
+avoid accepting stale landmark information when reconnecting.
 
 ### Guidance for PKI Operators
 
-PKI operators deploying MTCs for constrained device populations SHOULD publish landmark
-storage requirements as part of deployment documentation.  This documentation SHOULD
-include the landmark publication frequency, the expected certificate validity period for
-the target population, the per-landmark storage size and the calculated storage bound
-using the formula in Section 3.4.2.
+PKI operators SHOULD document landmark publication schedules and storage expectations
+for constrained populations.  They SHOULD also describe any rebasing or recovery
+procedures that are part of the deployment.
 
-Operators SHOULD also document the procedure for landmark rebasing if that capability
-is provided, including the expected rebase frequency and the verification procedure
-devices are expected to follow.
-
-Where a single PKI serves both constrained and non-constrained device populations,
-operators SHOULD consider whether separate landmark publication schedules are warranted,
-with a lower-frequency schedule for constrained populations.  The LDP infrastructure
-defined in Section 3.1 may continue to serve non-constrained populations, while
-constrained populations receive pre-provisioned landmark packages through an out-of-band
-distribution mechanism suited to their connectivity characteristics.
-
-A LandmarkPackage is the container format for a pre-provisioned set of landmarks
-distributed to constrained devices through out-of-band channels.  The package carries
-a contiguous range of landmarks from source_tree_size to target_tree_size, together
-with a LandmarkSubtreeProof demonstrating that the source landmark is a cryptographic
-prefix of the target landmark.  The package_signature field is produced by the CA
-over the remaining fields of the structure.  A device receiving a LandmarkPackage
-MUST verify the package_signature before accepting any landmark contained in the
-package, and MUST verify the consistency_proof before updating its LandmarkState.
-The source_tree_size in the package MUST be greater than or equal to the
-max_observed_tree_size recorded in the device's current LandmarkState.
-
-~~~
-struct LandmarkPackage {
-    uint64 package_version;
-    uint64 creation_timestamp;
-    uint64 source_tree_size;
-    uint64 target_tree_size;
-    Landmark landmarks<0..2^16-1>;
-    LandmarkSubtreeProof consistency_proof;
-    MTCSignature package_signature;
-}
-~~~
+Where a PKI serves both constrained and non-constrained populations, operators may
+consider separate landmark schedules or distribution methods.  Non-constrained devices
+can obtain landmarks online, while constrained devices may receive them through an
+out-of-band channel, with updates validated against the device's previously trusted
+landmark state.
 
 
 # Security Considerations
