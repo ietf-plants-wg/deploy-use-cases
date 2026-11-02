@@ -61,21 +61,20 @@ author:
 
 
 normative:
-I-D.draft-ietf-plants-merkle-tree-certs-03:
+I-D.ietf-plants-merkle-tree-certs:
 
 informative:
-# I-D.draft-ietf-plants-mtc-private-pki-monitoring:
-# I-D.draft-ietf-plants-mtc-constrained-devices:
+I-D.draft-gray-plants-mtc-ldp:
 
 ...
 
 --- abstract
 
 Merkle Tree Certificates (MTCs)
-I-D.ietf-plants-merkle-tree-certs has been defined for the
-use case of the WebPKI.
-In this document we explore when and how MTCs in parts or full can be used in different
-use cases. Some of these use-cases may provide benefit for private PKI usage.
+{{I-D.ietf-plants-merkle-tree-certs}} has been defined for the
+use case of the WebPKI.  In this document we explore when and how MTCs
+in parts or full can be used in different use cases. Some of these
+use-cases may provide benefit for private PKI usage.
 
 
 --- middle
@@ -179,7 +178,7 @@ of its landmarks.  There are different ways this can be accomplished:
 
 The Landmark Distribution Point (LDP) mechanism for retrieving consistency
 proofs and validating landmark-relative certificates is specified in
-I-D.draft-gray-plants-mtc-ldp
+{{I-D.draft-gray-plants-mtc-ldp}}
 
 ## Batching for performance optimization
 
