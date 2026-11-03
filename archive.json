@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-01T02:54:23.060522+00:00",
+  "timestamp": "2026-11-03T04:19:59.566070+00:00",
   "repo": "ietf-plants-wg/deploy-use-cases",
   "labels": [
     {
@@ -94,9 +94,17 @@
       "labels": [],
       "body": "In [draft-ietf-plants-mtc-deploy-use-cases-00, Section 3.5.5](https://www.ietf.org/archive/id/draft-ietf-plants-mtc-deploy-use-cases-00.txt),\nsigned artifacts may require verification throughout their operational\nlifetime, while the minimum batch-tree-head retention duration is based on\nthe maximum certificate validity period in the corresponding batch.\n\nCould the section also connect an application's intended verification horizon\nto its required verification inputs and the parties responsible for retaining\nthem? The existing requirement for continued access after CA decommissioning\nwould remain unchanged.\n\nConsider an application evaluating in 2045 a signature made in 2028. All\npublished batch tree heads remain accessible, but the application policy\nrequires an authenticated OCSP response retained to support the certificate-status\ndetermination at the relevant historical time. If that response is lost and\nno equivalent evidence is available from a source accepted by the policy,\nretaining the batch tree heads cannot recover the missing status evidence.\n\nThis issue concerns application validation inputs beyond the MTC certification\nproof. With the relying party's configured, trusted cosigner parameters and\ncosigner policy available, a standalone MTC can authenticate its subtree\nwithout fetching an external tree head. That does not supply every historical\nvalidation input required by the application. Historical validation is also\ndistinct from accepting an expired certificate for a current operation.\nSee [MTC-07, Sections 6.3 and 7.1\u20137.2](https://www.ietf.org/archive/id/draft-ietf-plants-merkle-tree-certs-07.html#section-6.3).\n\nSuggested text after the existing Section 3.5.5 paragraph:\n\n> Where an application's intended verification horizon extends beyond this\n> minimum period, its archival policy should identify the required verification\n> inputs, their retention periods, and the parties responsible for preserving\n> and making them available. These inputs depend on the certificate\n> representation and application validation policy; retained batch tree heads\n> alone need not be sufficient. The policy should provide for continuity of\n> those responsibilities when an issuer or archive service is retired. This\n> guidance does not extend certificate validity or change certificate validation\n> requirements.\n\nThe clarification does not allocate MTC syntax or an archival container, and\ndoes not prescribe one historical-validation policy. Existing evidence-record\nformats and application profiles retain their roles. Its applicability to\nlong-lived document signatures is motivation, not a request to add a document\nformat to this deployment draft.",
       "createdAt": "2026-10-25T20:46:25Z",
-      "updatedAt": "2026-10-25T20:46:25Z",
+      "updatedAt": "2026-11-02T23:48:39Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "VeriCommons",
+          "authorAssociation": "NONE",
+          "body": "With the publication of [revision -01](https://www.ietf.org/archive/id/draft-ietf-plants-mtc-deploy-use-cases-01.html#section-3.5.5), I would narrow this issue to the remaining application-policy question.\n\nSection 3.5.5 now calls for an archival plan for log data and published tree heads for an appropriate period, and already recognizes verification after CA decommissioning. My earlier reference to extending a stated minimum retention period therefore no longer applies.\n\nI propose replacing my earlier suggested paragraph with the following clarification connecting the application's intended verification horizon, its required validation inputs, and responsibility for preserving and making those inputs available:\n\n> The archival plan should account for the application's intended verification horizon and identify the verification inputs required by its certificate representation and application validation policy. Depending on that policy, these may include historical certificate-status evidence, application-specific authorization evidence, and trusted timestamp or preservation evidence. The plan should identify the parties responsible for preserving these inputs and making them available for the required period, including continuity when an issuer or archive service is retired. This guidance does not extend certificate validity or change certificate validation requirements.\n\nFor example, retained log data and tree heads cannot replace a lost authenticated OCSP response if the application's historical-validation policy requires it and no equivalent evidence is available from an accepted source. This is an example of a policy-dependent input, rather than a requirement to retain OCSP responses in every deployment.\n\nAs in the original issue, authenticating a standalone MTC using the relying party's configured, trusted cosigner parameters and policy does not by itself supply all historical validation inputs that an application may require.\n\nThis could remain brief deployment guidance, without reinstating a fixed minimum period or prescribing an archival format. I plan to prepare a small draft PR against revision -01 so that the proposed wording can be reviewed in context. Feedback from the document editors and WG participants on its scope and placement would be welcome.\n\nFor continuity, the original list message is [here](https://mailarchive.ietf.org/arch/msg/plants/MO62LItEOF8QyX6hfrSbWesyc1w/).",
+          "createdAt": "2026-11-02T23:48:39Z",
+          "updatedAt": "2026-11-02T23:48:39Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -993,20 +1001,76 @@
       "id": "PR_kwDOR-NuIc8AAAABL2ltrw",
       "title": "Jg remove the details of the LDP mechanism, add to own draft",
       "url": "https://github.com/ietf-plants-wg/deploy-use-cases/pull/18",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "johngray-dev",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Remove the details of the LDP mechanism, add it to its own draft",
       "createdAt": "2026-10-30T20:09:17Z",
-      "updatedAt": "2026-10-30T20:09:17Z",
+      "updatedAt": "2026-11-02T04:14:19Z",
       "baseRepository": "ietf-plants-wg/deploy-use-cases",
       "baseRefName": "main",
       "baseRefOid": "8ec7242551d7cff941b10d06a4109ad40804687d",
       "headRepository": "ietf-plants-wg/deploy-use-cases",
       "headRefName": "jg_removeWeeds",
       "headRefOid": "9ebe571e55c804f07fca3ec80c727b462ade4f07",
+      "closedAt": "2026-11-02T04:14:18Z",
+      "mergedAt": "2026-11-02T04:14:18Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "60f8453f8a91b0baea4900fb7d013757a456579f"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOR-NuIc8AAAABMOU4xg",
+      "title": "Jg remove weeds",
+      "url": "https://github.com/ietf-plants-wg/deploy-use-cases/pull/19",
+      "state": "MERGED",
+      "author": "johngray-dev",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Removed the technical weeds from the draft",
+      "createdAt": "2026-11-02T05:10:12Z",
+      "updatedAt": "2026-11-02T21:52:40Z",
+      "baseRepository": "ietf-plants-wg/deploy-use-cases",
+      "baseRefName": "main",
+      "baseRefOid": "60f8453f8a91b0baea4900fb7d013757a456579f",
+      "headRepository": "ietf-plants-wg/deploy-use-cases",
+      "headRefName": "jg_removeWeeds",
+      "headRefOid": "0d4c9c93bf8b130cd05b1ace8b3b2ee996426700",
+      "closedAt": "2026-11-02T21:52:40Z",
+      "mergedAt": "2026-11-02T21:52:40Z",
+      "mergedBy": "johngray-dev",
+      "mergeCommit": {
+        "oid": "710046648f4851e18ea6ffb9dafe338672be91db"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDOR-NuIc8AAAABMb7Kqw",
+      "title": "Clarify archival planning for signed artifacts",
+      "url": "https://github.com/ietf-plants-wg/deploy-use-cases/pull/20",
+      "state": "OPEN",
+      "author": "VeriCommons",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This adds brief guidance to Section 3.5.5 connecting the application's intended verification horizon to the validation inputs required by its policy and responsibility for preserving and making them available.\n\nThis follows the [updated proposal in #16](https://github.com/ietf-plants-wg/deploy-use-cases/issues/16#issuecomment-6591453826) for revision -01. The examples remain policy-dependent. Feedback on scope and placement is welcome.\n\nRefs #16. [Original mailing-list discussion](https://mailarchive.ietf.org/arch/msg/plants/MO62LItEOF8QyX6hfrSbWesyc1w/).",
+      "createdAt": "2026-11-03T00:15:11Z",
+      "updatedAt": "2026-11-03T00:15:11Z",
+      "baseRepository": "ietf-plants-wg/deploy-use-cases",
+      "baseRefName": "main",
+      "baseRefOid": "710046648f4851e18ea6ffb9dafe338672be91db",
+      "headRepository": "VeriCommons/deploy-use-cases",
+      "headRefName": "docs/issue16-archival-validation-inputs",
+      "headRefOid": "eae02b3fd5a176ee189703a76dbc7649dc457784",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
