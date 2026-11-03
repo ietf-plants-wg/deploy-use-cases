@@ -386,6 +386,14 @@ CA has been decommissioned.  Deployments therefore need an archival plan for log
 published tree heads for an appropriate period, including after the issuing CA has been
 decommissioned.
 
+The archival plan should account for the application's intended verification horizon and
+identify the verification inputs required by its certificate representation and
+application validation policy. Depending on that policy, these may include historical
+certificate-status evidence, application-specific authorization evidence, and trusted
+timestamp or preservation evidence. The plan should identify the parties responsible for
+preserving these inputs and making them available for the required period, including
+continuity when an issuer or archive service is retired. This guidance does not extend
+certificate validity or change certificate validation requirements.
 
 ## Private PKI PQC Migration with Downgrade Resistance
 
